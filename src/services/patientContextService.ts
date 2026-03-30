@@ -24,7 +24,7 @@ export const patientContextService = {
   },
 
   buildPatientContext(patient: PatientRow): PatientContext {
-    const conditions = (patient.primary_conditions as Array<{ display: string }>) ?? [];
+    const conditions = (patient.primary_conditions as unknown as Array<{ display: string }>) ?? [];
     const summary = patient.summary as Record<string, unknown>;
     const birthDate = new Date(patient.birth_date);
     const age = Math.floor((Date.now() - birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
