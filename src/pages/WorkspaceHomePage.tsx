@@ -79,7 +79,7 @@ export default function WorkspaceHomePage() {
               const conditions = (patient.primary_conditions as unknown as Array<{ display: string }>) ?? [];
               const summary = patient.summary as Record<string, unknown> | null;
               return (
-                <div key={patient.id} className="card-elevated p-0 overflow-hidden">
+                <div key={patient.id} className="card-elevated p-0 overflow-hidden" data-testid={`patient-card-${patient.id}`}>
                   <div className="px-5 py-3 border-b bg-muted/30 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
@@ -99,6 +99,7 @@ export default function WorkspaceHomePage() {
                         <p
                           className="text-base font-semibold text-foreground cursor-pointer hover:text-primary transition-colors"
                           onClick={() => navigate(`/app/patients/${patient.id}`)}
+                          data-testid={`patient-link-${patient.id}`}
                         >
                           {patient.display_name}
                         </p>
@@ -156,6 +157,7 @@ export default function WorkspaceHomePage() {
                   key={run.id}
                   className="card-clinical p-4 flex items-center justify-between cursor-pointer group"
                   onClick={() => navigate(`/app/runs/${run.id}`)}
+                  data-testid={`run-card-${run.id}`}
                 >
                   <div className="space-y-0.5">
                     <p className="text-sm font-medium group-hover:text-primary transition-colors">{run.patientName}</p>

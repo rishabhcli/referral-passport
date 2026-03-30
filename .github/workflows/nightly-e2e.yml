@@ -1,0 +1,44 @@
+name: Nightly E2E
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Verify Docker is available
+        run: docker info
+
+      - name: Run cross-browser E2E suite
+        run: npm run test:e2e:all
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-playwright-report
+          path: playwright-report
+          if-no-files-found: ignore

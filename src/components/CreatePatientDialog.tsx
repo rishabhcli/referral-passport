@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -90,13 +91,14 @@ export default function CreatePatientDialog() {
   return (
     <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) reset(); }}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-1.5 rounded-xl">
+        <Button variant="outline" size="sm" className="gap-1.5 rounded-xl" data-testid="create-patient-trigger">
           <Plus className="h-3.5 w-3.5" /> Add Patient
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>New Patient</DialogTitle>
+          <DialogDescription>Create a patient record for the referral workspace.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
           <div className="space-y-1.5">
@@ -175,7 +177,7 @@ export default function CreatePatientDialog() {
             )}
           </div>
 
-          <Button type="submit" disabled={submitting || !displayName.trim()} className="w-full gap-2 brand-gradient-bg border-0 text-white hover:opacity-90 rounded-xl">
+          <Button type="submit" disabled={submitting || !displayName.trim()} className="w-full gap-2 brand-gradient-bg border-0 text-white hover:opacity-90 rounded-xl" data-testid="create-patient-submit">
             {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Creating...</> : 'Create Patient'}
           </Button>
         </form>

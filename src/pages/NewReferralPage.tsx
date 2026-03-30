@@ -123,6 +123,7 @@ export default function NewReferralPage() {
                 <button
                   key={d.id}
                   onClick={() => setSelectedDestSlug(d.slug)}
+                  data-testid={`destination-option-${d.slug}`}
                   className={`w-full flex items-center gap-3 rounded-xl border p-3 text-left transition-colors ${
                     (activeDest?.id === d.id)
                       ? 'border-primary bg-primary/5'
@@ -197,6 +198,7 @@ export default function NewReferralPage() {
         className="w-full gap-2 brand-gradient-bg border-0 text-white hover:opacity-90 rounded-xl h-12 text-sm font-medium shadow-elevated"
         onClick={handleBuildAndSubmit}
         disabled={submitting || !patient || !destSlug}
+        data-testid="build-submit"
       >
         {submitting ? (
           <><Loader2 className="h-4 w-4 animate-spin" /> Building & Submitting...</>

@@ -71,13 +71,13 @@ export default function ReferralRunPage() {
   const actions = (
     <div className="flex gap-2">
       {runState.canRepair && (
-        <Button onClick={() => repairMutation.mutate()} disabled={repairMutation.isPending} className="gap-1.5">
+        <Button onClick={() => repairMutation.mutate()} disabled={repairMutation.isPending} className="gap-1.5" data-testid="repair-run">
           {repairMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ArrowRight className="h-3.5 w-3.5" />}
           Fetch Missing Evidence
         </Button>
       )}
       {runState.canReset && (
-        <Button variant="outline" onClick={() => resetMutation.mutate()} disabled={resetMutation.isPending} className="gap-1.5">
+        <Button variant="outline" onClick={() => resetMutation.mutate()} disabled={resetMutation.isPending} className="gap-1.5" data-testid="reset-run">
           <RefreshCw className="h-3.5 w-3.5" /> New Run
         </Button>
       )}

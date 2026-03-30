@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -112,6 +113,7 @@ export default function EditPatientDialog({ patient }: { patient: Patient }) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Edit Patient</DialogTitle>
+          <DialogDescription>Update the patient details used in the referral workspace.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
           <div className="space-y-1.5">
@@ -190,7 +192,7 @@ export default function EditPatientDialog({ patient }: { patient: Patient }) {
             )}
           </div>
 
-          <Button type="submit" disabled={submitting || !displayName.trim()} className="w-full gap-2 brand-gradient-bg border-0 text-white hover:opacity-90 rounded-xl">
+          <Button type="submit" disabled={submitting || !displayName.trim()} className="w-full gap-2 brand-gradient-bg border-0 text-white hover:opacity-90 rounded-xl" data-testid="edit-patient-submit">
             {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving...</> : 'Save Changes'}
           </Button>
         </form>
