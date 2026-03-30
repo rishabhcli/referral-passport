@@ -194,7 +194,6 @@ export const runOrchestratorService = {
     await auditService.log(userId, 'referral_run.repaired', 'referral_run', runId, { requirementCode, outcome: finalState });
 
     const allEvents = await getRunEvents(runId);
-    const patientContext = patientContextService.buildPatientContext(run.patients as any);
     const allRequirements = [...(decision.missingRequirements ?? []), ...(decision.satisfiedRequirements ?? [])];
 
     return buildReadModel(runId, finalState, decision.summary, patientContext, run.destinations as any,
