@@ -4,8 +4,7 @@ import { useAuth } from '@/features/auth/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield } from 'lucide-react';
+import { Shield, ArrowRight, Loader2 } from 'lucide-react';
 
 export default function AuthPage() {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -60,64 +59,77 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 text-primary">
-            <Shield className="h-6 w-6" />
-            <span className="text-xl font-semibold tracking-tight">Consult Passport</span>
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="w-full max-w-sm space-y-8 animate-fade-in-up">
+        {/* Brand */}
+        <div className="text-center space-y-3">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl brand-gradient-bg shadow-elevated mx-auto">
+            <Shield className="h-5 w-5 text-white" />
           </div>
-          <p className="text-sm text-muted-foreground">Referral Acceptance Workspace</p>
+          <div>
+            <h1 className="text-xl font-semibold tracking-tight">Consult Passport</h1>
+            <p className="text-sm text-muted-foreground mt-1">Referral Acceptance Workspace</p>
+          </div>
         </div>
 
-        <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-base">{mode === 'signin' ? 'Sign In' : 'Create Account'}</CardTitle>
-            <CardDescription>
+        {/* Auth form */}
+        <div className="card-elevated p-6 space-y-5">
+          <div>
+            <h2 className="text-sm font-semibold">{mode === 'signin' ? 'Sign In' : 'Create Account'}</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">
               {mode === 'signin' ? 'Access your workspace' : 'Set up a new account'}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-3">
-              {mode === 'signup' && (
-                <div className="space-y-1.5">
-                  <Label htmlFor="fullName">Full Name</Label>
-                  <Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} required />
-                </div>
-              )}
-              <div className="space-y-1.5">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6} />
-              </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Please wait...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
-              </Button>
-            </form>
-            <div className="mt-3 text-center">
-              <button
-                type="button"
-                className="text-xs text-muted-foreground hover:text-foreground underline"
-                onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
-              >
-                {mode === 'signin' ? 'Need an account? Sign up' : 'Already have an account? Sign in'}
-              </button>
-            </div>
-          </CardContent>
-        </Card>
+            </p>
+          </div>
 
-        <Card className="border-dashed">
-          <CardContent className="pt-4 pb-4">
-            <Button variant="outline" className="w-full" onClick={handleDemoLogin} disabled={loading}>
-              Continue as Demo Coordinator
+          <form onSubmit={handleSubmit} className="space-y-3">
+            {mode === 'signup' && (
+              <div className="space-y-1.5">
+                <Label htmlFor="fullName" className="text-xs">Full Name</Label>
+                <Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} required className="h-10 rounded-lg" />
+              </div>
+            )}
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-xs">Email</Label>
+              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="h-10 rounded-lg" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-xs">Password</Label>
+              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6} className="h-10 rounded-lg" />
+            </div>
+            {error && (
+              <div className="bg-status-danger-muted text-status-danger text-xs p-2.5 rounded-lg">{error}</div>
+            )}
+            <Button type="submit" className="w-full h-10 rounded-lg brand-gradient-bg border-0 text-white hover:opacity-90 gap-2" disabled={loading}>
+              {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+              {loading ? 'Please wait...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
             </Button>
-            <p className="text-xs text-muted-foreground text-center mt-2">Instant access with synthetic data</p>
-          </CardContent>
-        </Card>
+          </form>
+
+          <div className="text-center">
+            <button
+              type="button"
+              className="text-xs text-muted-foreground hover:text-primary transition-colors"
+              onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
+            >
+              {mode === 'signin' ? 'Need an account? Sign up' : 'Already have an account? Sign in'}
+            </button>
+          </div>
+        </div>
+
+        {/* Demo login */}
+        <div className="card-clinical p-4 border-dashed space-y-3">
+          <Button
+            variant="outline"
+            className="w-full h-10 rounded-lg gap-2 font-medium"
+            onClick={handleDemoLogin}
+            disabled={loading}
+          >
+            Continue as Demo Coordinator <ArrowRight className="h-3.5 w-3.5" />
+          </Button>
+          <p className="text-[11px] text-muted-foreground text-center">
+            Instant access with synthetic patient data
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { Button } from '@/components/ui/button';
-import { Shield, LogOut } from 'lucide-react';
+import { Shield, LogOut, User } from 'lucide-react';
 
 export default function AppShell() {
   const { profile, signOut } = useAuth();
@@ -14,22 +14,33 @@ export default function AppShell() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card">
-        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4">
-          <Link to="/app" className="flex items-center gap-2 text-primary font-semibold text-sm tracking-tight">
-            <Shield className="h-4 w-4" />
-            Consult Passport
+      <header className="sticky top-0 z-40 border-b bg-card/80 backdrop-blur-md">
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
+          <Link to="/app" className="flex items-center gap-2.5 group">
+            <div className="h-8 w-8 rounded-lg brand-gradient-bg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+              <Shield className="h-4 w-4 text-white" />
+            </div>
+            <span className="font-semibold text-foreground text-sm tracking-tight">Consult Passport</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-muted-foreground">{profile?.fullName ?? profile?.email}</span>
-            <span className="text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">{profile?.role}</span>
-            <Button variant="ghost" size="sm" onClick={handleSignOut} className="h-7 w-7 p-0">
+
+          <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2 mr-2">
+              <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
+                <User className="h-3.5 w-3.5 text-primary" />
+              </div>
+              <div className="text-right">
+                <p className="text-xs font-medium leading-tight">{profile?.fullName ?? profile?.email}</p>
+                <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-wider">{profile?.role}</p>
+              </div>
+            </div>
+            <div className="h-5 w-px bg-border hidden sm:block" />
+            <Button variant="ghost" size="sm" onClick={handleSignOut} className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground">
               <LogOut className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
       </header>
-      <main>
+      <main className="animate-fade-in-up">
         <Outlet />
       </main>
     </div>
