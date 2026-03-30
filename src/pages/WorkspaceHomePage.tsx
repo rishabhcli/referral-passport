@@ -3,7 +3,6 @@ import { useAuth } from '@/features/auth/AuthProvider';
 import { useQuery } from '@tanstack/react-query';
 import { runOrchestratorService } from '@/services/runOrchestratorService';
 import { patientContextService } from '@/services/patientContextService';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Clock, CheckCircle2, XCircle, AlertTriangle, Shield, Activity, User } from 'lucide-react';
@@ -20,9 +19,9 @@ export default function WorkspaceHomePage() {
   const { profile } = useAuth();
   const navigate = useNavigate();
 
-  const { data: patient } = useQuery({
-    queryKey: ['defaultPatient'],
-    queryFn: () => patientContextService.getDefaultPatient(),
+  const { data: patients } = useQuery({
+    queryKey: ['patients'],
+    queryFn: () => patientContextService.listPatients(),
   });
 
   const { data: recentRuns } = useQuery({
@@ -30,8 +29,6 @@ export default function WorkspaceHomePage() {
     queryFn: () => runOrchestratorService.listRecentRuns(profile!.id),
     enabled: !!profile,
   });
-
-  const conditions = patient ? (patient.primary_conditions as unknown as Array<{ display: string }>) ?? [] : [];
 
   const acceptedCount = recentRuns?.filter(r => r.state === 'accepted').length ?? 0;
   const blockedCount = recentRuns?.filter(r => r.state === 'blocked').length ?? 0;
@@ -66,40 +63,66 @@ export default function WorkspaceHomePage() {
         </div>
       )}
 
-      {/* Patient Card */}
-      {patient && (
-        <div className="card-elevated p-0 overflow-hidden">
-          <div className="px-5 py-3 border-b bg-muted/30 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
-                <User className="h-3 w-3 text-primary" />
-              </div>
-              <span className="text-xs font-medium text-muted-foreground">Demo Patient</span>
-            </div>
-            <Badge variant="outline" className="text-[10px] font-mono uppercase tracking-wider">Synthetic</Badge>
+      {/* Patients */}
+      {patients && patients.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-foreground">Patients</h2>
+            <span className="text-[11px] text-muted-foreground">{patients.length} total</span>
           </div>
-          <div className="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="space-y-2">
-              <div>
-                <p
-                  className="text-base font-semibold text-foreground cursor-pointer hover:text-primary transition-colors"
-                  onClick={() => navigate(`/app/patients/${patient.id}`)}
-                >
-                  {patient.display_name}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {(patient.summary as any)?.age ?? '67'}{patient.sex?.[0]} · MRN: {patient.mrn}
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {conditions.map((c, i) => (
-                  <span key={i} className="status-chip bg-secondary text-secondary-foreground text-[11px]">{c.display}</span>
-                ))}
-              </div>
-            </div>
-            <Button onClick={() => navigate(`/app/referrals/new?patient=${patient.id}`)} className="gap-2 brand-gradient-bg border-0 text-white hover:opacity-90 rounded-xl h-11 px-6 shadow-card shrink-0">
-              Start Consult Passport <ArrowRight className="h-4 w-4" />
-            </Button>
+          <div className="space-y-2">
+            {patients.map(patient => {
+              const conditions = (patient.primary_conditions as unknown as Array<{ display: string }>) ?? [];
+              const summary = patient.summary as Record<string, unknown> | null;
+              return (
+                <div key={patient.id} className="card-elevated p-0 overflow-hidden">
+                  <div className="px-5 py-3 border-b bg-muted/30 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
+                        <User className="h-3 w-3 text-primary" />
+                      </div>
+                      <span className="text-xs font-medium text-muted-foreground">
+                        {patient.is_synthetic ? 'Synthetic' : 'Patient'}
+                      </span>
+                    </div>
+                    {patient.is_synthetic && (
+                      <Badge variant="outline" className="text-[10px] font-mono uppercase tracking-wider">Demo</Badge>
+                    )}
+                  </div>
+                  <div className="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="space-y-2">
+                      <div>
+                        <p
+                          className="text-base font-semibold text-foreground cursor-pointer hover:text-primary transition-colors"
+                          onClick={() => navigate(`/app/patients/${patient.id}`)}
+                        >
+                          {patient.display_name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {(summary as any)?.age ?? ''}{patient.sex?.[0] ?? ''}{patient.mrn ? ` · MRN: ${patient.mrn}` : ''}
+                        </p>
+                      </div>
+                      {conditions.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5">
+                          {conditions.slice(0, 4).map((c, i) => (
+                            <span key={i} className="status-chip bg-secondary text-secondary-foreground text-[11px]">{c.display}</span>
+                          ))}
+                          {conditions.length > 4 && (
+                            <span className="status-chip bg-secondary text-secondary-foreground text-[11px]">+{conditions.length - 4}</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <Button
+                      onClick={() => navigate(`/app/referrals/new?patient=${patient.id}`)}
+                      className="gap-2 brand-gradient-bg border-0 text-white hover:opacity-90 rounded-xl h-11 px-6 shadow-card shrink-0"
+                    >
+                      Start Consult Passport <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
