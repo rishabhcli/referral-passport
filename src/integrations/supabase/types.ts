@@ -14,16 +14,450 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      artifact_snapshots: {
+        Row: {
+          artifact_name: string
+          artifact_version: number | null
+          content: Json
+          created_at: string | null
+          id: string
+          run_id: string
+        }
+        Insert: {
+          artifact_name: string
+          artifact_version?: number | null
+          content: Json
+          created_at?: string | null
+          id?: string
+          run_id: string
+        }
+        Update: {
+          artifact_name?: string
+          artifact_version?: number | null
+          content?: Json
+          created_at?: string | null
+          id?: string
+          run_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "artifact_snapshots_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "referral_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      demo_scenarios: {
+        Row: {
+          created_at: string | null
+          destination_id: string | null
+          display_name: string
+          id: string
+          is_default: boolean | null
+          patient_id: string | null
+          scenario_json: Json
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          destination_id?: string | null
+          display_name: string
+          id?: string
+          is_default?: boolean | null
+          patient_id?: string | null
+          scenario_json: Json
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          destination_id?: string | null
+          display_name?: string
+          id?: string
+          is_default?: boolean | null
+          patient_id?: string | null
+          scenario_json?: Json
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "demo_scenarios_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "demo_scenarios_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      destinations: {
+        Row: {
+          agent_label: string | null
+          created_at: string | null
+          display_name: string
+          id: string
+          is_active: boolean | null
+          requirement_profile_version: string | null
+          slug: string
+          specialty: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          agent_label?: string | null
+          created_at?: string | null
+          display_name: string
+          id?: string
+          is_active?: boolean | null
+          requirement_profile_version?: string | null
+          slug: string
+          specialty?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          agent_label?: string | null
+          created_at?: string | null
+          display_name?: string
+          id?: string
+          is_active?: boolean | null
+          requirement_profile_version?: string | null
+          slug?: string
+          specialty?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      fhir_resources: {
+        Row: {
+          created_at: string | null
+          effective_at: string | null
+          id: string
+          patient_id: string
+          resource_json: Json
+          resource_key: string
+          resource_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          effective_at?: string | null
+          id?: string
+          patient_id: string
+          resource_json: Json
+          resource_key: string
+          resource_type: string
+        }
+        Update: {
+          created_at?: string | null
+          effective_at?: string | null
+          id?: string
+          patient_id?: string
+          resource_json?: Json
+          resource_key?: string
+          resource_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fhir_resources_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patients: {
+        Row: {
+          birth_date: string | null
+          created_at: string | null
+          display_name: string
+          external_patient_key: string | null
+          id: string
+          is_synthetic: boolean | null
+          mrn: string | null
+          primary_conditions: Json | null
+          sex: string | null
+          summary: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          birth_date?: string | null
+          created_at?: string | null
+          display_name: string
+          external_patient_key?: string | null
+          id?: string
+          is_synthetic?: boolean | null
+          mrn?: string | null
+          primary_conditions?: Json | null
+          sex?: string | null
+          summary?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          birth_date?: string | null
+          created_at?: string | null
+          display_name?: string
+          external_patient_key?: string | null
+          id?: string
+          is_synthetic?: boolean | null
+          mrn?: string | null
+          primary_conditions?: Json | null
+          sex?: string | null
+          summary?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          organization_name: string | null
+          role: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          organization_name?: string | null
+          role?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          organization_name?: string | null
+          role?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      referral_runs: {
+        Row: {
+          accepted_at: string | null
+          blocked_at: string | null
+          context_snapshot: Json | null
+          created_at: string | null
+          created_by: string | null
+          current_requirement_code: string | null
+          destination_id: string
+          entry_surface: string | null
+          id: string
+          patient_id: string
+          repair_attempted: boolean | null
+          scenario_id: string | null
+          state: string
+          state_reason: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          blocked_at?: string | null
+          context_snapshot?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          current_requirement_code?: string | null
+          destination_id: string
+          entry_surface?: string | null
+          id?: string
+          patient_id: string
+          repair_attempted?: boolean | null
+          scenario_id?: string | null
+          state?: string
+          state_reason?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          blocked_at?: string | null
+          context_snapshot?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          current_requirement_code?: string | null
+          destination_id?: string
+          entry_surface?: string | null
+          id?: string
+          patient_id?: string
+          repair_attempted?: boolean | null
+          scenario_id?: string | null
+          state?: string
+          state_reason?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_runs_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_runs_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_runs_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_runs_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "demo_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      requirement_profiles: {
+        Row: {
+          created_at: string | null
+          destination_id: string | null
+          id: string
+          is_active: boolean | null
+          profile_json: Json
+          updated_at: string | null
+          version: string
+        }
+        Insert: {
+          created_at?: string | null
+          destination_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          profile_json: Json
+          updated_at?: string | null
+          version: string
+        }
+        Update: {
+          created_at?: string | null
+          destination_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          profile_json?: Json
+          updated_at?: string | null
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "requirement_profiles_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      run_events: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          payload: Json | null
+          run_id: string
+          source: string | null
+          stage: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          payload?: Json | null
+          run_id: string
+          source?: string | null
+          stage?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          payload?: Json | null
+          run_id?: string
+          source?: string | null
+          stage?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "run_events_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "referral_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "coordinator" | "clinician" | "demo"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +584,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "coordinator", "clinician", "demo"],
+    },
   },
 } as const
