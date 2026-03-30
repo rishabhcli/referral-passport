@@ -151,7 +151,6 @@ export const runOrchestratorService = {
 
       const allEvents = await getRunEvents(runId);
       const artifacts = await getLatestArtifacts(runId);
-      const patientContext = patientContextService.buildPatientContext(run.patients as any);
       return buildReadModel(runId, 'blocked', 'UACR not found', patientContext, run.destinations as any,
         artifacts.referral_passport as any, (artifacts.evidence_table as EvidenceItem[]) ?? [], artifacts.intake_decision as any,
         [], trace, allEvents);
