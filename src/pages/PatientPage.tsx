@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ArrowRight, Shield, User, Calendar, Activity, Clock, CheckCircle2, XCircle } from 'lucide-react';
+import EditPatientDialog from '@/components/EditPatientDialog';
 
 const stateStyles: Record<string, string> = {
   accepted: 'bg-status-success-muted text-status-success',
