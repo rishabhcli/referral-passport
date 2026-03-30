@@ -169,7 +169,8 @@ export const runOrchestratorService = {
     await persistArtifact(runId, 'referral_passport', passport);
 
     await updateRunState(runId, 'resubmitting');
-    trace.push(traceService.createEntry('a2a', 'Resubmitting to Nephrology Intake', 'Packet updated with UACR evidence', 'info', 'a2a-transport'));
+    const destName = (run.destinations as any)?.display_name ?? 'Intake';
+    trace.push(traceService.createEntry('a2a', `Resubmitting to ${destName}`, 'Packet updated with new evidence', 'info', 'a2a-transport'));
     await appendEvent(runId, 'intake.resubmitted', 'orchestrator', 'resubmitting', {});
 
     const decision = await intakeDeskService.evaluate(run.destination_id, evidence, passport as unknown as Record<string, unknown>);
