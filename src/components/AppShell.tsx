@@ -2,12 +2,12 @@ import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/hooks/use-theme';
-import { Shield, LogOut, User, Moon, Sun } from 'lucide-react';
+import { Shield, LogOut, User, Moon, Sun, Monitor } from 'lucide-react';
 
 export default function AppShell() {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, preference, cycleTheme } = useTheme();
 
   const handleSignOut = async () => {
     await signOut();
@@ -36,8 +36,8 @@ export default function AppShell() {
               </div>
             </div>
             <div className="h-5 w-px bg-border hidden sm:block" />
-            <Button variant="ghost" size="sm" onClick={toggleTheme} className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground">
-              {theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+            <Button variant="ghost" size="sm" onClick={cycleTheme} className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground" title={`Theme: ${preference}`}>
+              {preference === 'system' ? <Monitor className="h-3.5 w-3.5" /> : theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
             </Button>
             <Button variant="ghost" size="sm" onClick={handleSignOut} className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground">
               <LogOut className="h-3.5 w-3.5" />
