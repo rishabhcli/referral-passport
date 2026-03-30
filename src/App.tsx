@@ -3,8 +3,15 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import { AuthProvider } from "@/features/auth/AuthProvider";
+import { AuthGate } from "@/features/auth/AuthGate";
+import AppShell from "@/components/AppShell";
+import LandingPage from "@/pages/LandingPage";
+import AuthPage from "@/pages/AuthPage";
+import WorkspaceHomePage from "@/pages/WorkspaceHomePage";
+import NewReferralPage from "@/pages/NewReferralPage";
+import ReferralRunPage from "@/pages/ReferralRunPage";
+import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -14,11 +21,18 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/app" element={<AuthGate><AppShell /></AuthGate>}>
+              <Route index element={<WorkspaceHomePage />} />
+              <Route path="referrals/new" element={<NewReferralPage />} />
+              <Route path="runs/:runId" element={<ReferralRunPage />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
