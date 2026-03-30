@@ -2,7 +2,7 @@ import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/hooks/use-theme';
-import { Shield, LogOut, User, Moon, Sun } from 'lucide-react';
+import { Shield, LogOut, User, Moon, Sun, Monitor } from 'lucide-react';
 
 export default function AppShell() {
   const { profile, signOut } = useAuth();
