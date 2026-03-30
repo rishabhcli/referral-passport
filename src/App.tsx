@@ -9,9 +9,10 @@ import AppShell from "@/components/AppShell";
 import LandingPage from "@/pages/LandingPage";
 import AuthPage from "@/pages/AuthPage";
 import WorkspaceHomePage from "@/pages/WorkspaceHomePage";
+import PatientPage from "@/pages/PatientPage";
 import NewReferralPage from "@/pages/NewReferralPage";
 import ReferralRunPage from "@/pages/ReferralRunPage";
-import PatientPage from "@/pages/PatientPage";
+import ReplayRunPage from "@/pages/ReplayRunPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/replay/:scenario" element={<ReplayRunPage />} />
             <Route path="/app" element={<AuthGate><AppShell /></AuthGate>}>
               <Route index element={<WorkspaceHomePage />} />
               <Route path="patients/:patientId" element={<PatientPage />} />
