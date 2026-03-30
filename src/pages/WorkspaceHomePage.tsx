@@ -6,6 +6,7 @@ import { patientContextService } from '@/services/patientContextService';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Clock, CheckCircle2, XCircle, AlertTriangle, Shield, Activity, User } from 'lucide-react';
+import CreatePatientDialog from '@/components/CreatePatientDialog';
 import type { RunState } from '@/types/domain';
 
 const stateConfig: Record<string, { icon: React.ReactNode; className: string }> = {
