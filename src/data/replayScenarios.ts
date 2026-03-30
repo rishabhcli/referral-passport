@@ -40,11 +40,14 @@ const uacrEvidence = {
   id: 'e8', type: 'Observation', label: 'UACR', date: '2026-03-10', value: '285 mg/g (elevated)', source: 'Demo EHR (Synthetic)', attached: true, newlyAdded: true, resourceType: 'Observation', resourceKey: 'obs-uacr-recent',
 };
 
-const baseRequirements = [
-  { code: 'reason_present', label: 'Reason for Consult', status: 'met' as const, description: 'Referral reason documented', required: true, repairable: false },
-  { code: 'kidney_context_present', label: 'Kidney Disease Context', status: 'met' as const, description: 'CKD staging and history present', required: true, repairable: false },
-  { code: 'renal_labs_present', label: 'Recent Renal Labs', status: 'met' as const, description: 'eGFR and creatinine within 90 days', required: true, repairable: false },
-  { code: 'medications_present', label: 'Medication List', status: 'met' as const, description: 'Current medications documented', required: true, repairable: false },
+const uacrReqMet: RequirementItem = { code: 'uacr_recent', label: 'UACR within 90 days', status: 'met', description: 'UACR observation present and within recency window', required: true, repairable: true };
+const uacrReqUnmet: RequirementItem = { code: 'uacr_recent', label: 'UACR within 90 days', status: 'unmet', description: 'Not found in patient chart — order/retrieve manually', required: true, repairable: true };
+
+const baseRequirements: RequirementItem[] = [
+  { code: 'reason_present', label: 'Reason for Consult', status: 'met', description: 'Referral reason documented', required: true, repairable: false },
+  { code: 'kidney_context_present', label: 'Kidney Disease Context', status: 'met', description: 'CKD staging and history present', required: true, repairable: false },
+  { code: 'renal_labs_present', label: 'Recent Renal Labs', status: 'met', description: 'eGFR and creatinine within 90 days', required: true, repairable: false },
+  { code: 'medications_present', label: 'Medication List', status: 'met', description: 'Current medications documented', required: true, repairable: false },
 ];
 
 const passport = {
