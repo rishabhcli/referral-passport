@@ -132,7 +132,9 @@ export const runOrchestratorService = {
     await appendEvent(runId, 'repair.started', 'orchestrator', 'repairing', { requirementCode });
     trace.push(traceService.createEntry('mcp', 'MCP tool call: get_latest_uacr', 'Searching patient chart for qualifying UACR observation', 'info', 'chart-tool-service'));
 
-    const uacrResult = await chartToolService.getLatestUacr(run.patient_id);
+    const patientContext = patientContextService.buildPatientContext(run.patients as any);
+    const sourceLabel = patientContext.fhirContext.sourceLabel;
+    const uacrResult = await chartToolService.getLatestUacr(run.patient_id, sourceLabel);
     trace.push(...uacrResult.trace);
     await appendEvent(runId, 'uacr.requested', 'chart-tool', 'repairing', {});
 
