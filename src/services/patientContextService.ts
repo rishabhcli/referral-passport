@@ -23,11 +23,23 @@ export const patientContextService = {
     return data;
   },
 
-  buildPatientContext(patient: { id: string; display_name: string; birth_date: string; sex: string | null; primary_conditions: unknown; summary: unknown; external_patient_key: string | null }): PatientContext {
+  buildPatientContext(patient: {
+    id: string;
+    display_name: string;
+    birth_date: string;
+    sex: string | null;
+    primary_conditions: unknown;
+    summary: unknown;
+    external_patient_key: string | null;
+    is_synthetic?: boolean | null;
+  }): PatientContext {
     const conditions = (patient.primary_conditions as Array<{ display: string }>) ?? [];
     const summary = patient.summary as Record<string, unknown>;
     const birthDate = new Date(patient.birth_date);
     const age = Math.floor((Date.now() - birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+
+    const isSynthetic = patient.is_synthetic ?? false;
+    const sourceLabel = isSynthetic ? 'Demo EHR (Synthetic)' : (summary?.sourceLabel as string ?? 'EHR');
 
     return {
       patientId: patient.id,
@@ -36,16 +48,18 @@ export const patientContextService = {
       sex: patient.sex ?? 'Unknown',
       conditionTags: conditions.map(c => c.display),
       fhirContext: {
-        fhirUrl: `https://fhir.demo.clinic/Patient/${patient.external_patient_key}`,
+        fhirUrl: patient.external_patient_key
+          ? `https://fhir.clinic/Patient/${patient.external_patient_key}`
+          : `urn:patient:${patient.id}`,
         patientId: patient.external_patient_key ?? patient.id,
         tokenPresent: true,
-        sourceLabel: 'Demo EHR (Synthetic)',
+        sourceLabel,
       },
     };
   },
 
   async listPatients() {
-    const { data, error } = await supabase.from('patients').select('*');
+    const { data, error } = await supabase.from('patients').select('*').order('display_name');
     if (error) throw error;
     return data ?? [];
   },

@@ -49,7 +49,8 @@ export const runOrchestratorService = {
     trace.push(traceService.createEntry('context', 'Patient context bound', `Patient: ${patientContext.displayName} (${patientContext.age}${patientContext.sex[0]})`, 'success', 'context-service'));
     trace.push(traceService.createEntry('fhir', 'FHIR context loaded', `Source: ${patientContext.fhirContext.sourceLabel}`, 'success', 'fhir-service'));
 
-    const snapshot = await chartToolService.getPatientSnapshot(patientId);
+    const sourceLabel = patientContext.fhirContext.sourceLabel;
+    const snapshot = await chartToolService.getPatientSnapshot(patientId, sourceLabel);
     trace.push(...snapshot.trace);
     await appendEvent(runId, 'snapshot.received', 'chart-tool', 'assembling', { evidenceCount: snapshot.evidence.length });
 
@@ -62,7 +63,7 @@ export const runOrchestratorService = {
     await appendEvent(runId, 'passport.created', 'passport-builder', 'assembling', {});
 
     await updateRunState(runId, 'submitted');
-    trace.push(traceService.createEntry('a2a', 'A2A task submitted to Nephrology Intake', `Submitting referral packet with ${snapshot.evidence.length} evidence items`, 'info', 'a2a-transport'));
+    trace.push(traceService.createEntry('a2a', `A2A task submitted to ${dest.display_name}`, `Submitting referral packet with ${snapshot.evidence.length} evidence items`, 'info', 'a2a-transport'));
     await appendEvent(runId, 'intake.submitted', 'orchestrator', 'submitted', {});
 
     const decision = await intakeDeskService.evaluate(dest.id, snapshot.evidence, passport as unknown as Record<string, unknown>);
@@ -131,7 +132,9 @@ export const runOrchestratorService = {
     await appendEvent(runId, 'repair.started', 'orchestrator', 'repairing', { requirementCode });
     trace.push(traceService.createEntry('mcp', 'MCP tool call: get_latest_uacr', 'Searching patient chart for qualifying UACR observation', 'info', 'chart-tool-service'));
 
-    const uacrResult = await chartToolService.getLatestUacr(run.patient_id);
+    const patientContext = patientContextService.buildPatientContext(run.patients as any);
+    const sourceLabel = patientContext.fhirContext.sourceLabel;
+    const uacrResult = await chartToolService.getLatestUacr(run.patient_id, sourceLabel);
     trace.push(...uacrResult.trace);
     await appendEvent(runId, 'uacr.requested', 'chart-tool', 'repairing', {});
 
@@ -148,7 +151,6 @@ export const runOrchestratorService = {
 
       const allEvents = await getRunEvents(runId);
       const artifacts = await getLatestArtifacts(runId);
-      const patientContext = patientContextService.buildPatientContext(run.patients as any);
       return buildReadModel(runId, 'blocked', 'UACR not found', patientContext, run.destinations as any,
         artifacts.referral_passport as any, (artifacts.evidence_table as EvidenceItem[]) ?? [], artifacts.intake_decision as any,
         [], trace, allEvents);
@@ -167,7 +169,8 @@ export const runOrchestratorService = {
     await persistArtifact(runId, 'referral_passport', passport);
 
     await updateRunState(runId, 'resubmitting');
-    trace.push(traceService.createEntry('a2a', 'Resubmitting to Nephrology Intake', 'Packet updated with UACR evidence', 'info', 'a2a-transport'));
+    const destName = (run.destinations as any)?.display_name ?? 'Intake';
+    trace.push(traceService.createEntry('a2a', `Resubmitting to ${destName}`, 'Packet updated with new evidence', 'info', 'a2a-transport'));
     await appendEvent(runId, 'intake.resubmitted', 'orchestrator', 'resubmitting', {});
 
     const decision = await intakeDeskService.evaluate(run.destination_id, evidence, passport as unknown as Record<string, unknown>);
@@ -181,17 +184,16 @@ export const runOrchestratorService = {
     }).eq('id', runId);
 
     if (finalState === 'accepted') {
-      trace.push(traceService.createEntry('a2a', 'A2A response: accepted', 'Referral accepted by Nephrology Intake', 'success', 'nephrology-intake'));
+      trace.push(traceService.createEntry('a2a', 'A2A response: accepted', `Referral accepted by ${destName}`, 'success', 'intake-agent'));
       await appendEvent(runId, 'intake.accepted', 'intake-desk', 'accepted', {});
     } else {
-      trace.push(traceService.createEntry('a2a', 'A2A response: blocked', decision.summary, 'error', 'nephrology-intake'));
+      trace.push(traceService.createEntry('a2a', 'A2A response: blocked', decision.summary, 'error', 'intake-agent'));
       await appendEvent(runId, 'run.blocked', 'intake-desk', 'blocked', {});
     }
 
     await auditService.log(userId, 'referral_run.repaired', 'referral_run', runId, { requirementCode, outcome: finalState });
 
     const allEvents = await getRunEvents(runId);
-    const patientContext = patientContextService.buildPatientContext(run.patients as any);
     const allRequirements = [...(decision.missingRequirements ?? []), ...(decision.satisfiedRequirements ?? [])];
 
     return buildReadModel(runId, finalState, decision.summary, patientContext, run.destinations as any,

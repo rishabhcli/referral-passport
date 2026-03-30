@@ -87,7 +87,9 @@ export default function PatientPage() {
             </div>
             <span className="mono-label">Patient Record</span>
           </div>
-          <Badge variant="outline" className="text-[10px] font-mono uppercase tracking-wider">Synthetic</Badge>
+          {patient.is_synthetic && (
+            <Badge variant="outline" className="text-[10px] font-mono uppercase tracking-wider">Synthetic</Badge>
+          )}
         </div>
         <div className="px-5 py-5 space-y-4">
           <div>
@@ -116,14 +118,14 @@ export default function PatientPage() {
         </div>
       </div>
 
-      {/* Destination CTA */}
+      {/* Start Referral CTA */}
       <div className="card-clinical p-5 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
           <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
             <Shield className="h-5 w-5 text-primary" />
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-foreground">Nephrology Intake</p>
+            <p className="text-sm font-semibold text-foreground">New Referral</p>
             <p className="text-xs text-muted-foreground">Build & submit a referral passport</p>
           </div>
         </div>
