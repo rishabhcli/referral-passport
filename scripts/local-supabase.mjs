@@ -15,6 +15,14 @@ function runSupabase(args, { inherit = false } = {}) {
 }
 
 function parseEnvOutput(output) {
+  const unquote = (value) => {
+    if (value.startsWith('"') && value.endsWith('"')) {
+      return value.slice(1, -1);
+    }
+
+    return value;
+  };
+
   return output
     .split(/\r?\n/)
     .map((line) => line.trim())
@@ -26,7 +34,7 @@ function parseEnvOutput(output) {
       }
 
       const key = line.slice(0, index);
-      const value = line.slice(index + 1);
+      const value = unquote(line.slice(index + 1));
       acc[key] = value;
       return acc;
     }, {});
@@ -54,7 +62,7 @@ export function ensureLocalSupabaseRunning() {
   }
 }
 
-async function ensureDemoUser(env) {
+export async function ensureDemoUser(env) {
   const adminClient = createClient(env.API_URL, env.SERVICE_ROLE_KEY, {
     auth: {
       persistSession: false,

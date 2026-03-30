@@ -1,0 +1,63 @@
+{
+  "generatedAt": "2026-03-30T21:01:26.015Z",
+  "finalVideo": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/final/referral-passport-demo-1080p.mp4",
+  "totalDurationSeconds": 285.204,
+  "sections": [
+    {
+      "id": "s1-hook-rewind",
+      "sourceClip": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/raw/s1-hook-rewind.mp4",
+      "sourceAudio": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s1-hook-rewind.wav",
+      "renderedSection": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/processed/s1-hook-rewind.mp4",
+      "durationSeconds": 36.88
+    },
+    {
+      "id": "s2-problem-and-product",
+      "sourceClip": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/raw/s2-problem-and-product.webm",
+      "sourceAudio": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s2-problem-and-product.wav",
+      "renderedSection": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/processed/s2-problem-and-product.mp4",
+      "durationSeconds": 29.604
+    },
+    {
+      "id": "s3-patient-context",
+      "sourceClip": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/raw/s3-patient-context.mp4",
+      "sourceAudio": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s3-patient-context.wav",
+      "renderedSection": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/processed/s3-patient-context.mp4",
+      "durationSeconds": 36.346
+    },
+    {
+      "id": "s4-initial-submission",
+      "sourceClip": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/raw/s4-initial-submission.mp4",
+      "sourceAudio": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s4-initial-submission.wav",
+      "renderedSection": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/processed/s4-initial-submission.mp4",
+      "durationSeconds": 33.616
+    },
+    {
+      "id": "s5-repair-to-accepted",
+      "sourceClip": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/raw/s5-repair-to-accepted.mp4",
+      "sourceAudio": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s5-repair-to-accepted.wav",
+      "renderedSection": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/processed/s5-repair-to-accepted.mp4",
+      "durationSeconds": 39.633
+    },
+    {
+      "id": "s6-audit-trail",
+      "sourceClip": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/raw/s6-audit-trail.mp4",
+      "sourceAudio": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s6-audit-trail.wav",
+      "renderedSection": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/processed/s6-audit-trail.mp4",
+      "durationSeconds": 40.672
+    },
+    {
+      "id": "s7-blocked-proof",
+      "sourceClip": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/raw/s7-blocked-proof.mp4",
+      "sourceAudio": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s7-blocked-proof.wav",
+      "renderedSection": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/processed/s7-blocked-proof.mp4",
+      "durationSeconds": 30.898
+    },
+    {
+      "id": "s8-close",
+      "sourceClip": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/raw/s8-close.mp4",
+      "sourceAudio": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s8-close.wav",
+      "renderedSection": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/processed/s8-close.mp4",
+      "durationSeconds": 37.533
+    }
+  ]
+}

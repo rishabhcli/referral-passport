@@ -1,0 +1,463 @@
+1
+00:00:00,000 --> 00:00:02,240
+Here's the whole pitch in one screen.
+
+2
+00:00:02,240 --> 00:00:03,980
+A minute ago, this referral was missing
+
+3
+00:00:03,980 --> 00:00:06,160
+a required nephrology lab.
+
+4
+00:00:06,160 --> 00:00:08,080
+Now it's accepted because the app found
+
+5
+00:00:08,080 --> 00:00:11,080
+that evidence in the chart attached it to the passport
+
+6
+00:00:11,080 --> 00:00:13,840
+and resubmitted the packet without starting over.
+
+7
+00:00:13,840 --> 00:00:16,280
+You can literally see the new UACR row,
+
+8
+00:00:16,280 --> 00:00:17,880
+the checklist turning complete,
+
+9
+00:00:17,880 --> 00:00:19,960
+and the intake decision flipping from input
+
+10
+00:00:19,960 --> 00:00:21,860
+required to accepted.
+
+11
+00:00:21,860 --> 00:00:23,580
+That's Consult Passport.
+
+12
+00:00:23,580 --> 00:00:25,280
+It is not an AI note writer.
+
+13
+00:00:25,280 --> 00:00:27,400
+It is a referral acceptance engine
+
+14
+00:00:27,400 --> 00:00:29,240
+that makes the rules visible.
+
+15
+00:00:29,240 --> 00:00:31,160
+Repairs what can be repaired,
+
+16
+00:00:31,160 --> 00:00:33,200
+and keeps an audit trail of every step
+
+17
+00:00:33,200 --> 00:00:35,020
+between rejection and readiness.
+
+18
+00:00:36,880 --> 00:00:39,800
+Most referral workflows break on the boring part.
+
+19
+00:00:39,800 --> 00:00:41,520
+The packet is almost good enough,
+
+20
+00:00:41,520 --> 00:00:44,720
+one lab is missing, the specialist desk kicks it back,
+
+21
+00:00:44,720 --> 00:00:46,960
+and suddenly the team is doing phone calls,
+
+22
+00:00:46,960 --> 00:00:49,200
+chart scavenger hunts, and status updates
+
+23
+00:00:49,200 --> 00:00:51,080
+in three different places.
+
+24
+00:00:51,080 --> 00:00:53,200
+What I like about this product is that it treats
+
+25
+00:00:53,200 --> 00:00:55,760
+that mess as a real workflow problem.
+
+26
+00:00:55,760 --> 00:00:58,640
+Instead of asking staff to guess what intake wants,
+
+27
+00:00:58,640 --> 00:01:00,680
+it makes the requirements explicit,
+
+28
+00:01:00,680 --> 00:01:02,160
+keeps them attached to the run,
+
+29
+00:01:02,160 --> 00:01:04,920
+and turns the repair path into part of the product.
+
+30
+00:01:06,480 --> 00:01:08,880
+The workspace starts with real patient context
+
+31
+00:01:08,880 --> 00:01:10,480
+instead of a blank form.
+
+32
+00:01:10,480 --> 00:01:14,240
+For this seeded demo, Eleanor Vance already has CKD history,
+
+33
+00:01:14,240 --> 00:01:16,320
+recent renal labs, medications,
+
+34
+00:01:16,320 --> 00:01:18,360
+and a referral note in the chart.
+
+35
+00:01:18,360 --> 00:01:20,440
+The useful thing is that I do not have to manually
+
+36
+00:01:20,440 --> 00:01:22,880
+repackage that information before I can even ask
+
+37
+00:01:22,880 --> 00:01:24,440
+for intake review.
+
+38
+00:01:24,440 --> 00:01:26,960
+I can open the patient record, skim the evidence
+
+39
+00:01:26,960 --> 00:01:28,320
+that already exists,
+
+40
+00:01:28,320 --> 00:01:31,040
+and then start a Consult Passport from there.
+
+41
+00:01:31,040 --> 00:01:34,800
+Under the hood, the app snapshots the FHIR-style context,
+
+42
+00:01:34,800 --> 00:01:36,720
+assembles the evidence table,
+
+43
+00:01:36,720 --> 00:01:38,800
+and prepares a structured referral packet
+
+44
+00:01:38,800 --> 00:01:40,960
+from the chart that is already on hand.
+
+45
+00:01:42,840 --> 00:01:46,240
+When I submit, the first decision is intentionally strict.
+
+46
+00:01:46,240 --> 00:01:48,200
+Intake does not just wave the packet through
+
+47
+00:01:48,200 --> 00:01:50,320
+because the story sounds reasonable.
+
+48
+00:01:50,320 --> 00:01:53,360
+It evaluates the actual requirements for this destination,
+
+49
+00:01:53,360 --> 00:01:56,320
+and it tells me one required item is still missing,
+
+50
+00:01:56,360 --> 00:01:58,120
+a recent UACR.
+
+51
+00:01:58,120 --> 00:01:59,800
+That is exactly the kind of detail
+
+52
+00:01:59,800 --> 00:02:03,280
+that usually disappears into email or verbal follow-up.
+
+53
+00:02:03,280 --> 00:02:05,240
+Here it is explicit, repairable,
+
+54
+00:02:05,240 --> 00:02:07,480
+and attached to the same live run.
+
+55
+00:02:07,480 --> 00:02:09,560
+I can see the checklist, the missing rule,
+
+56
+00:02:09,560 --> 00:02:12,000
+the decision summary, and the button that tells me
+
+57
+00:02:12,000 --> 00:02:14,600
+there is still a legitimate path to acceptance.
+
+58
+00:02:16,480 --> 00:02:19,280
+Now watch the part that actually feels different.
+
+59
+00:02:19,280 --> 00:02:21,080
+I click fetch missing evidence.
+
+60
+00:02:21,080 --> 00:02:24,400
+The chart tool looks for the latest qualifying UACR,
+
+61
+00:02:24,400 --> 00:02:27,520
+the run attaches that observation to the evidence table,
+
+62
+00:02:27,520 --> 00:02:30,160
+and the packet is resubmitted immediately.
+
+63
+00:02:30,160 --> 00:02:32,080
+There is no fake magic here.
+
+64
+00:02:32,080 --> 00:02:34,920
+The product is very literal about what changed.
+
+65
+00:02:34,920 --> 00:02:38,320
+You can see the checklist move from four of five to five of five.
+
+66
+00:02:38,320 --> 00:02:41,280
+You can see the new UACR row appear in the passport,
+
+67
+00:02:41,280 --> 00:02:43,320
+and you can see the intake decision flip
+
+68
+00:02:43,320 --> 00:02:45,560
+to accepted on the same run.
+
+69
+00:02:45,560 --> 00:02:48,480
+Instead of sending a coordinator on a scavenger hunt,
+
+70
+00:02:48,480 --> 00:02:51,600
+the system closes the gap with real chart evidence
+
+71
+00:02:51,600 --> 00:02:53,960
+and shows you the exact before and after.
+
+72
+00:02:56,120 --> 00:02:59,240
+What makes this more than a flashy demo is the audit trail.
+
+73
+00:02:59,240 --> 00:03:02,160
+The passport is visible, the evidence is visible,
+
+74
+00:03:02,160 --> 00:03:04,040
+the intake decision is visible,
+
+75
+00:03:04,040 --> 00:03:06,600
+and the submission trace shows the exact sequence.
+
+76
+00:03:06,600 --> 00:03:09,760
+Context bound, snapshot received, packet assembled,
+
+77
+00:03:09,760 --> 00:03:13,160
+input required, repair started, UACR attached,
+
+78
+00:03:13,160 --> 00:03:14,960
+resubmitted, accepted.
+
+79
+00:03:14,960 --> 00:03:17,920
+That matters because referral automation is only useful
+
+80
+00:03:17,920 --> 00:03:20,480
+if a human can still explain the outcome.
+
+81
+00:03:20,480 --> 00:03:22,640
+If an intake lead asks why this passed,
+
+82
+00:03:22,640 --> 00:03:24,480
+there is a concrete answer.
+
+83
+00:03:24,480 --> 00:03:27,440
+If an engineer asks what the system actually did,
+
+84
+00:03:27,440 --> 00:03:29,840
+there is a concrete answer there too.
+
+85
+00:03:29,840 --> 00:03:32,000
+The app is showing both product value
+
+86
+00:03:32,000 --> 00:03:34,520
+and technical accountability in the same screen.
+
+87
+00:03:36,800 --> 00:03:38,400
+The system is just as explicit
+
+88
+00:03:38,400 --> 00:03:40,360
+when it cannot fix the problem.
+
+89
+00:03:40,360 --> 00:03:42,600
+Marcus Hale follows the same workflow,
+
+90
+00:03:42,600 --> 00:03:45,640
+but there is not a qualifying UACR in the chart.
+
+91
+00:03:45,640 --> 00:03:46,920
+The run ends blocked,
+
+92
+00:03:46,920 --> 00:03:48,920
+not because the app failed silently,
+
+93
+00:03:48,920 --> 00:03:51,720
+and not because it tried to bluff its way to success.
+
+94
+00:03:51,720 --> 00:03:52,560
+It reached the limit
+
+95
+00:03:52,560 --> 00:03:54,400
+of what it could retrieve automatically,
+
+96
+00:03:54,400 --> 00:03:55,760
+preserved that decision,
+
+97
+00:03:55,760 --> 00:03:58,280
+and makes the follow-up state obvious.
+
+98
+00:03:58,280 --> 00:04:00,240
+That honesty is important.
+
+99
+00:04:00,240 --> 00:04:02,280
+A good demo should show the success path,
+
+100
+00:04:02,280 --> 00:04:04,520
+but a serious product also has to show
+
+101
+00:04:04,520 --> 00:04:06,000
+where automation stops.
+
+102
+00:04:07,680 --> 00:04:09,160
+That's the value here.
+
+103
+00:04:09,160 --> 00:04:11,320
+Referral intake becomes a deterministic,
+
+104
+00:04:11,320 --> 00:04:14,320
+inspectable process instead of a black box.
+
+105
+00:04:14,320 --> 00:04:15,520
+You can show what was submitted,
+
+106
+00:04:15,520 --> 00:04:17,200
+what was missing, what was repaired,
+
+107
+00:04:17,200 --> 00:04:18,920
+what still needs manual follow-up,
+
+108
+00:04:18,920 --> 00:04:21,920
+and when the patient actually became intake-ready.
+
+109
+00:04:21,920 --> 00:04:25,480
+For a coordinator, that saves time and context switching.
+
+110
+00:04:25,480 --> 00:04:27,600
+For intake, it improves packet quality
+
+111
+00:04:27,600 --> 00:04:29,280
+without hiding the rules.
+
+112
+00:04:29,280 --> 00:04:31,920
+And for judges, it proves this is a real product
+
+113
+00:04:31,920 --> 00:04:33,640
+with real operational behavior.
+
+114
+00:04:33,640 --> 00:04:37,280
+The impressive part is not just that it reaches accepted.
+
+115
+00:04:37,280 --> 00:04:40,000
+It is that every state along the way is visible,
+
+116
+00:04:40,000 --> 00:04:43,560
+defensible, and grounded in real product interactions.

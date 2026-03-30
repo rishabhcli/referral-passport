@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2026-03-30T13:48:35.246792",
+  "voice": "af_sarah",
+  "speed": 1.0,
+  "sampleRate": 24000,
+  "totalDurationSeconds": 285.184,
+  "masterAudioPath": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/referral-passport-demo-narration.wav",
+  "auditions": [
+    {
+      "voice": "af_sarah",
+      "path": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/auditions/af_sarah-audition.wav",
+      "durationSeconds": 73.602
+    },
+    {
+      "voice": "af_nicole",
+      "path": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/auditions/af_nicole-audition.wav",
+      "durationSeconds": 114.093
+    },
+    {
+      "voice": "af_bella",
+      "path": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/auditions/af_bella-audition.wav",
+      "durationSeconds": 77.314
+    }
+  ],
+  "segments": [
+    {
+      "id": "s1-hook-rewind",
+      "title": "Hook And Rewind",
+      "path": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s1-hook-rewind.wav",
+      "tailPadSeconds": 2.0,
+      "durationSeconds": 36.88
+    },
+    {
+      "id": "s2-problem-and-product",
+      "title": "Problem And Product Intro",
+      "path": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s2-problem-and-product.wav",
+      "tailPadSeconds": 1.7,
+      "durationSeconds": 29.604
+    },
+    {
+      "id": "s3-patient-context",
+      "title": "Patient Context",
+      "path": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s3-patient-context.wav",
+      "tailPadSeconds": 2.0,
+      "durationSeconds": 36.347
+    },
+    {
+      "id": "s4-initial-submission",
+      "title": "Initial Submission",
+      "path": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s4-initial-submission.wav",
+      "tailPadSeconds": 2.0,
+      "durationSeconds": 33.616
+    },
+    {
+      "id": "s5-repair-to-accepted",
+      "title": "Repair To Accepted",
+      "path": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s5-repair-to-accepted.wav",
+      "tailPadSeconds": 2.3,
+      "durationSeconds": 39.633
+    },
+    {
+      "id": "s6-audit-trail",
+      "title": "Audit Trail",
+      "path": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s6-audit-trail.wav",
+      "tailPadSeconds": 2.4,
+      "durationSeconds": 40.672
+    },
+    {
+      "id": "s7-blocked-proof",
+      "title": "Blocked Proof",
+      "path": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s7-blocked-proof.wav",
+      "tailPadSeconds": 1.8,
+      "durationSeconds": 30.899
+    },
+    {
+      "id": "s8-close",
+      "title": "Close",
+      "path": "/Users/rishabhbansal/Documents/GitHub/referral-passport/output/demo/audio/s8-close.wav",
+      "tailPadSeconds": 1.8,
+      "durationSeconds": 37.533
+    }
+  ]
+}

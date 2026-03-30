@@ -1,0 +1,9 @@
+{
+  "baseUrl": "http://127.0.0.1:8080",
+  "createdAt": "2026-03-30T20:25:35.028Z",
+  "runIds": {
+    "eleanorInputRequired": "498e3852-e01b-4d45-a5b6-2dad76848d94",
+    "eleanorAccepted": "5a0b0dfc-ca84-460c-8a8c-f37637dd3e98",
+    "marcusInputRequired": "6529ab13-e2a0-4130-b90c-fa8215291342"
+  }
+}
