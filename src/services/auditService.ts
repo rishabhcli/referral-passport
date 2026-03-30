@@ -8,12 +8,12 @@ export const auditService = {
     entityId: string,
     metadata: Record<string, unknown> = {}
   ) {
-    await supabase.from('audit_logs').insert({
+    await supabase.from('audit_logs').insert([{
       actor_id: actorId,
       action,
       entity_type: entityType,
       entity_id: entityId,
-      metadata,
-    });
+      metadata: metadata as any,
+    }]);
   },
 };

@@ -5,7 +5,7 @@ import { passportBuilderService } from './passportBuilderService';
 import { patientContextService } from './patientContextService';
 import { traceService } from './traceService';
 import { auditService } from './auditService';
-import { isValidTransition, TERMINAL_STATES } from '@/types/domain';
+import { TERMINAL_STATES } from '@/types/domain';
 import type {
   RunState, RunStateModel, SponsorTraceItem, EvidenceItem,
   ReferralPassport, IntakeDecision, RequirementItem, RunEvent,
@@ -16,77 +16,58 @@ export const runOrchestratorService = {
     userId: string,
     patientId: string,
     destinationSlug: string,
-    scenarioSlug?: string
   ): Promise<RunStateModel> {
-    // Get destination
     const { data: dest, error: destErr } = await supabase
-      .from('destinations')
-      .select('*')
-      .eq('slug', destinationSlug)
-      .single();
+      .from('destinations').select('*').eq('slug', destinationSlug).single();
     if (destErr || !dest) throw new Error('Destination not found');
 
-    // Get scenario
     const { data: scenario } = await supabase
-      .from('demo_scenarios')
-      .select('*')
-      .eq('is_default', true)
-      .single();
+      .from('demo_scenarios').select('*').eq('is_default', true).single();
 
-    // Get patient
     const patient = await patientContextService.getPatient(patientId);
     const patientContext = patientContextService.buildPatientContext(patient);
 
-    // Create run
     const { data: run, error: runErr } = await supabase
       .from('referral_runs')
-      .insert({
+      .insert([{
         created_by: userId,
         patient_id: patientId,
         destination_id: dest.id,
         scenario_id: scenario?.id ?? null,
-        state: 'assembling',
+        state: 'assembling' as const,
         entry_surface: 'app',
-        context_snapshot: patientContext as unknown as Record<string, unknown>,
-      })
+        context_snapshot: patientContext as any,
+      }])
       .select()
       .single();
     if (runErr || !run) throw new Error(`Failed to create run: ${runErr?.message}`);
 
     const runId = run.id;
     const trace: SponsorTraceItem[] = [];
-    const events: RunEvent[] = [];
 
-    // Event: run created
     await appendEvent(runId, 'run.created', 'orchestrator', 'init', { patientId, destinationSlug });
     trace.push(traceService.createEntry('context', 'Patient context bound', `Patient: ${patientContext.displayName} (${patientContext.age}${patientContext.sex[0]})`, 'success', 'context-service'));
     trace.push(traceService.createEntry('fhir', 'FHIR context loaded', `Source: ${patientContext.fhirContext.sourceLabel}`, 'success', 'fhir-service'));
 
-    // Get chart snapshot (intentionally excludes UACR)
     const snapshot = await chartToolService.getPatientSnapshot(patientId);
     trace.push(...snapshot.trace);
     await appendEvent(runId, 'snapshot.received', 'chart-tool', 'assembling', { evidenceCount: snapshot.evidence.length });
 
-    // Build passport
     const passport = passportBuilderService.buildPassport(patientContext, snapshot.evidence, dest.display_name);
     passport.status = 'submitted';
     passport.lastSubmittedAt = new Date().toISOString();
 
-    // Persist artifacts
     await persistArtifact(runId, 'referral_passport', passport);
     await persistArtifact(runId, 'evidence_table', snapshot.evidence);
     await appendEvent(runId, 'passport.created', 'passport-builder', 'assembling', {});
 
-    // Update state to submitted
     await updateRunState(runId, 'submitted');
     trace.push(traceService.createEntry('a2a', 'A2A task submitted to Nephrology Intake', `Submitting referral packet with ${snapshot.evidence.length} evidence items`, 'info', 'a2a-transport'));
     await appendEvent(runId, 'intake.submitted', 'orchestrator', 'submitted', {});
 
-    // Evaluate with intake desk
     const decision = await intakeDeskService.evaluate(dest.id, snapshot.evidence, passport as unknown as Record<string, unknown>);
     await persistArtifact(runId, 'intake_decision', decision);
 
-    // Update state based on decision
     const newState: RunState = decision.decision === 'accepted' ? 'accepted' :
       decision.decision === 'input_required' ? 'input_required' : 'blocked';
 
@@ -101,12 +82,10 @@ export const runOrchestratorService = {
       });
     }
 
-    // Log audit
     await auditService.log(userId, 'referral_run.started', 'referral_run', runId, { patientId, destinationSlug });
 
-    // Build read model
     const allEvents = await getRunEvents(runId);
-    return buildReadModel(runId, newState, decision.summary, patientContext, dest, passport, snapshot.evidence, decision, decision.missingRequirements.concat(decision.satisfiedRequirements), trace, allEvents);
+    return buildReadModel(runId, newState, decision.summary, patientContext, dest, passport, snapshot.evidence, decision, [...decision.missingRequirements, ...decision.satisfiedRequirements], trace, allEvents);
   },
 
   async getReferralRun(runId: string): Promise<RunStateModel> {
@@ -128,7 +107,6 @@ export const runOrchestratorService = {
       ? [...(decision.missingRequirements ?? []), ...(decision.satisfiedRequirements ?? [])]
       : [];
 
-    // Reconstruct trace from events
     const trace = reconstructTrace(events);
 
     return buildReadModel(
@@ -149,26 +127,22 @@ export const runOrchestratorService = {
 
     const trace: SponsorTraceItem[] = [];
 
-    // Set repairing
     await updateRunState(runId, 'repairing');
     await appendEvent(runId, 'repair.started', 'orchestrator', 'repairing', { requirementCode });
     trace.push(traceService.createEntry('mcp', 'MCP tool call: get_latest_uacr', 'Searching patient chart for qualifying UACR observation', 'info', 'chart-tool-service'));
 
-    // Get UACR
     const uacrResult = await chartToolService.getLatestUacr(run.patient_id);
     trace.push(...uacrResult.trace);
     await appendEvent(runId, 'uacr.requested', 'chart-tool', 'repairing', {});
 
     if (!uacrResult.evidence) {
-      // Blocked
       await updateRunState(runId, 'blocked', 'UACR not found in patient chart. Manual follow-up required.');
-      const followUpTask = {
+      await persistArtifact(runId, 'follow_up_task', {
         action: 'Order/retrieve UACR and resubmit referral',
         assignee: 'Referring provider',
         priority: 'high',
         status: 'pending',
-      };
-      await persistArtifact(runId, 'follow_up_task', followUpTask);
+      });
       await appendEvent(runId, 'run.blocked', 'orchestrator', 'blocked', { reason: 'uacr_not_found' });
       trace.push(traceService.createEntry('system', 'Run blocked', 'UACR not found — manual follow-up required', 'error', 'orchestrator'));
 
@@ -180,10 +154,8 @@ export const runOrchestratorService = {
         [], trace, allEvents);
     }
 
-    // Attach evidence
     await appendEvent(runId, 'uacr.attached', 'chart-tool', 'repairing', { resourceKey: uacrResult.evidence.resourceKey });
 
-    // Update artifacts
     const artifacts = await getLatestArtifacts(runId);
     let evidence = (artifacts.evidence_table as EvidenceItem[]) ?? [];
     evidence = [...evidence, uacrResult.evidence];
@@ -194,7 +166,6 @@ export const runOrchestratorService = {
     passport.lastSubmittedAt = new Date().toISOString();
     await persistArtifact(runId, 'referral_passport', passport);
 
-    // Resubmit
     await updateRunState(runId, 'resubmitting');
     trace.push(traceService.createEntry('a2a', 'Resubmitting to Nephrology Intake', 'Packet updated with UACR evidence', 'info', 'a2a-transport'));
     await appendEvent(runId, 'intake.resubmitted', 'orchestrator', 'resubmitting', {});
@@ -240,7 +211,7 @@ export const runOrchestratorService = {
       state: r.state as RunState,
       patientName: (r.patients as any)?.display_name ?? 'Unknown',
       destination: (r.destinations as any)?.display_name ?? 'Unknown',
-      createdAt: r.created_at,
+      createdAt: r.created_at ?? '',
     }));
   },
 
@@ -253,8 +224,6 @@ export const runOrchestratorService = {
   },
 };
 
-// === Helpers ===
-
 async function updateRunState(runId: string, state: RunState, reason?: string | null, requirementCode?: string | null) {
   const updates: Record<string, unknown> = { state };
   if (reason !== undefined) updates.state_reason = reason;
@@ -263,11 +232,10 @@ async function updateRunState(runId: string, state: RunState, reason?: string | 
 }
 
 async function appendEvent(runId: string, eventType: string, source: string, stage: string, payload: Record<string, unknown>) {
-  await supabase.from('run_events').insert({ run_id: runId, event_type: eventType, source, stage, payload });
+  await supabase.from('run_events').insert([{ run_id: runId, event_type: eventType, source, stage, payload: payload as any }]);
 }
 
 async function persistArtifact(runId: string, artifactName: string, content: unknown) {
-  // Get latest version
   const { data: existing } = await supabase
     .from('artifact_snapshots')
     .select('artifact_version')
@@ -277,12 +245,12 @@ async function persistArtifact(runId: string, artifactName: string, content: unk
     .limit(1);
 
   const version = (existing?.[0]?.artifact_version ?? 0) + 1;
-  await supabase.from('artifact_snapshots').insert({
+  await supabase.from('artifact_snapshots').insert([{
     run_id: runId,
     artifact_name: artifactName,
     artifact_version: version,
-    content: content as Record<string, unknown>,
-  });
+    content: content as any,
+  }]);
 }
 
 async function getLatestArtifacts(runId: string): Promise<Record<string, unknown>> {
@@ -314,8 +282,8 @@ async function getRunEvents(runId: string): Promise<RunEvent[]> {
     eventType: e.event_type,
     source: e.source ?? '',
     stage: e.stage ?? '',
-    payload: e.payload ?? {},
-    createdAt: e.created_at,
+    payload: (e.payload ?? {}) as Record<string, unknown>,
+    createdAt: e.created_at ?? '',
   }));
 }
 
