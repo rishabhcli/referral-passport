@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import type { UserProfile } from '@/types/domain';
+import type { UserProfile, UserRole } from '@/types/domain';
 
 export const authService = {
   async signIn(email: string, password: string) {
@@ -41,9 +41,9 @@ export const authService = {
       id: data.id,
       email: data.email ?? '',
       fullName: data.full_name ?? '',
-      role: data.role ?? 'demo',
+      role: (data.role ?? 'demo') as UserRole,
       organizationName: data.organization_name ?? '',
-      createdAt: data.created_at,
+      createdAt: data.created_at ?? '',
     };
   },
 

@@ -1,7 +1,6 @@
 import { supabase } from '@/lib/supabase';
-import type { EvidenceItem, FhirResourceRow, SponsorTraceItem } from '@/types/domain';
+import type { EvidenceItem, SponsorTraceItem } from '@/types/domain';
 
-// MCP-inspired chart tool layer
 export const chartToolService = {
   async getPatientSnapshot(patientId: string): Promise<{
     evidence: EvidenceItem[];
@@ -11,12 +10,12 @@ export const chartToolService = {
       .from('fhir_resources')
       .select('*')
       .eq('patient_id', patientId)
-      .neq('resource_key', 'obs-uacr-recent') // Intentionally exclude UACR from initial snapshot
+      .neq('resource_key', 'obs-uacr-recent')
       .order('effective_at', { ascending: false });
 
     if (error) throw new Error(`Chart snapshot failed: ${error.message}`);
 
-    const evidence = (resources ?? []).map((r: FhirResourceRow) => mapResourceToEvidence(r, true));
+    const evidence = (resources ?? []).map(r => mapResourceToEvidence(r, true));
     const trace: SponsorTraceItem[] = [
       {
         id: crypto.randomUUID(),
@@ -77,14 +76,15 @@ export const chartToolService = {
       return { evidence: null, trace };
     }
 
-    const evidence = mapResourceToEvidence(resource as FhirResourceRow, true);
+    const evidence = mapResourceToEvidence(resource, true);
     evidence.newlyAdded = true;
 
+    const rJson = resource.resource_json as any;
     trace.push({
       id: crypto.randomUUID(),
       kind: 'fhir',
       label: 'FHIR Observation retrieved',
-      description: `UACR: ${(resource.resource_json as any)?.valueQuantity?.value} ${(resource.resource_json as any)?.valueQuantity?.unit} (${new Date(resource.effective_at).toLocaleDateString()})`,
+      description: `UACR: ${rJson?.valueQuantity?.value} ${rJson?.valueQuantity?.unit} (${new Date(resource.effective_at).toLocaleDateString()})`,
       status: 'success',
       timestamp: new Date().toISOString(),
       source: 'fhir-data-service',
@@ -94,7 +94,7 @@ export const chartToolService = {
   },
 };
 
-function mapResourceToEvidence(r: FhirResourceRow, attached: boolean): EvidenceItem {
+function mapResourceToEvidence(r: { id: string; resource_type: string; resource_key: string; resource_json: unknown; effective_at: string }, attached: boolean): EvidenceItem {
   const json = r.resource_json as Record<string, any>;
   let label = '';
   let value = '';
@@ -123,7 +123,7 @@ function mapResourceToEvidence(r: FhirResourceRow, attached: boolean): EvidenceI
       break;
     case 'DocumentReference':
       label = json.type?.text ?? 'Document';
-      value = json.content ? (json.content as string).substring(0, 120) + '...' : '';
+      value = json.content ? String(json.content).substring(0, 120) + '...' : '';
       type = 'Document';
       break;
   }

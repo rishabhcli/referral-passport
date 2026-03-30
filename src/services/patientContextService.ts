@@ -1,8 +1,8 @@
 import { supabase } from '@/lib/supabase';
-import type { PatientContext, PatientRow } from '@/types/domain';
+import type { PatientContext } from '@/types/domain';
 
 export const patientContextService = {
-  async getPatient(patientId: string): Promise<PatientRow> {
+  async getPatient(patientId: string) {
     const { data, error } = await supabase
       .from('patients')
       .select('*')
@@ -12,7 +12,7 @@ export const patientContextService = {
     return data;
   },
 
-  async getDefaultPatient(): Promise<PatientRow> {
+  async getDefaultPatient() {
     const { data, error } = await supabase
       .from('patients')
       .select('*')
@@ -23,8 +23,8 @@ export const patientContextService = {
     return data;
   },
 
-  buildPatientContext(patient: PatientRow): PatientContext {
-    const conditions = (patient.primary_conditions as unknown as Array<{ display: string }>) ?? [];
+  buildPatientContext(patient: { id: string; display_name: string; birth_date: string; sex: string | null; primary_conditions: unknown; summary: unknown; external_patient_key: string | null }): PatientContext {
+    const conditions = (patient.primary_conditions as Array<{ display: string }>) ?? [];
     const summary = patient.summary as Record<string, unknown>;
     const birthDate = new Date(patient.birth_date);
     const age = Math.floor((Date.now() - birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
@@ -44,7 +44,7 @@ export const patientContextService = {
     };
   },
 
-  async listPatients(): Promise<PatientRow[]> {
+  async listPatients() {
     const { data, error } = await supabase.from('patients').select('*');
     if (error) throw error;
     return data ?? [];
