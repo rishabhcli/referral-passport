@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ArrowRight, Shield, User, Calendar, Activity, Clock, CheckCircle2, XCircle } from 'lucide-react';
+import EditPatientDialog from '@/components/EditPatientDialog';
 
 const stateStyles: Record<string, string> = {
   accepted: 'bg-status-success-muted text-status-success',
@@ -87,9 +88,12 @@ export default function PatientPage() {
             </div>
             <span className="mono-label">Patient Record</span>
           </div>
-          {patient.is_synthetic && (
-            <Badge variant="outline" className="text-[10px] font-mono uppercase tracking-wider">Synthetic</Badge>
-          )}
+          <div className="flex items-center gap-2">
+            {patient.is_synthetic && (
+              <Badge variant="outline" className="text-[10px] font-mono uppercase tracking-wider">Synthetic</Badge>
+            )}
+            <EditPatientDialog patient={patient} />
+          </div>
         </div>
         <div className="px-5 py-5 space-y-4">
           <div>
