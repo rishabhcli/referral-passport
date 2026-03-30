@@ -1,6 +1,7 @@
-import type { RunStateModel } from '@/types/domain';
+import type { RunStateModel, RequirementItem, SponsorTraceItem } from '@/types/domain';
 
 const ts = (minutesAgo: number) => new Date(Date.now() - minutesAgo * 60_000).toISOString();
+type TStatus = SponsorTraceItem['status'];
 
 const sharedPatientContext = {
   patientId: 'replay-patient',
