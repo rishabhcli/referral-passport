@@ -87,7 +87,9 @@ export default function PatientPage() {
             </div>
             <span className="mono-label">Patient Record</span>
           </div>
-          <Badge variant="outline" className="text-[10px] font-mono uppercase tracking-wider">Synthetic</Badge>
+          {patient.is_synthetic && (
+            <Badge variant="outline" className="text-[10px] font-mono uppercase tracking-wider">Synthetic</Badge>
+          )}
         </div>
         <div className="px-5 py-5 space-y-4">
           <div>
