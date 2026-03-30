@@ -184,7 +184,7 @@ export const runOrchestratorService = {
     }).eq('id', runId);
 
     if (finalState === 'accepted') {
-      trace.push(traceService.createEntry('a2a', 'A2A response: accepted', 'Referral accepted by Nephrology Intake', 'success', 'nephrology-intake'));
+      trace.push(traceService.createEntry('a2a', 'A2A response: accepted', `Referral accepted by ${destName}`, 'success', 'intake-agent'));
       await appendEvent(runId, 'intake.accepted', 'intake-desk', 'accepted', {});
     } else {
       trace.push(traceService.createEntry('a2a', 'A2A response: blocked', decision.summary, 'error', 'nephrology-intake'));
