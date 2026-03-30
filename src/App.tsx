@@ -11,6 +11,7 @@ import AuthPage from "@/pages/AuthPage";
 import WorkspaceHomePage from "@/pages/WorkspaceHomePage";
 import NewReferralPage from "@/pages/NewReferralPage";
 import ReferralRunPage from "@/pages/ReferralRunPage";
+import PatientPage from "@/pages/PatientPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
