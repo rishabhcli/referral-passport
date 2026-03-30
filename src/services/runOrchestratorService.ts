@@ -63,7 +63,7 @@ export const runOrchestratorService = {
     await appendEvent(runId, 'passport.created', 'passport-builder', 'assembling', {});
 
     await updateRunState(runId, 'submitted');
-    trace.push(traceService.createEntry('a2a', 'A2A task submitted to Nephrology Intake', `Submitting referral packet with ${snapshot.evidence.length} evidence items`, 'info', 'a2a-transport'));
+    trace.push(traceService.createEntry('a2a', `A2A task submitted to ${dest.display_name}`, `Submitting referral packet with ${snapshot.evidence.length} evidence items`, 'info', 'a2a-transport'));
     await appendEvent(runId, 'intake.submitted', 'orchestrator', 'submitted', {});
 
     const decision = await intakeDeskService.evaluate(dest.id, snapshot.evidence, passport as unknown as Record<string, unknown>);
