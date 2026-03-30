@@ -1,6 +1,7 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { Button } from '@/components/ui/button';
+import { useTheme } from '@/hooks/use-theme';
 import { Shield, LogOut, User } from 'lucide-react';
 
 export default function AppShell() {
