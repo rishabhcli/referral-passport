@@ -248,6 +248,69 @@ function SponsorTraceRail({ trace }: { trace: SponsorTraceItem[] }) {
   );
 }
 
+// === Activity Timeline ===
+const EVENT_META: Record<string, { label: string; icon: 'check' | 'clock' | 'alert' | 'x' }> = {
+  'run.created': { label: 'Run created', icon: 'clock' },
+  'context.bound': { label: 'Patient context bound', icon: 'check' },
+  'snapshot.requested': { label: 'Chart snapshot requested', icon: 'clock' },
+  'snapshot.received': { label: 'Chart snapshot received', icon: 'check' },
+  'passport.created': { label: 'Passport assembled', icon: 'check' },
+  'evidence.created': { label: 'Evidence table created', icon: 'check' },
+  'intake.submitted': { label: 'Submitted to intake desk', icon: 'clock' },
+  'intake.input_required': { label: 'Intake: input required', icon: 'alert' },
+  'repair.started': { label: 'Repair initiated', icon: 'clock' },
+  'uacr.requested': { label: 'UACR retrieval requested', icon: 'clock' },
+  'uacr.attached': { label: 'UACR evidence attached', icon: 'check' },
+  'intake.resubmitted': { label: 'Resubmitted to intake desk', icon: 'clock' },
+  'intake.accepted': { label: 'Intake: accepted', icon: 'check' },
+  'run.blocked': { label: 'Run blocked', icon: 'x' },
+  'run.failed': { label: 'Run failed', icon: 'x' },
+};
+
+function ActivityTimeline({ events }: { events: RunStateModel['events'] }) {
+  const iconEl = (type: 'check' | 'clock' | 'alert' | 'x') => {
+    if (type === 'check') return <CheckCircle2 className="h-3 w-3 text-status-success" />;
+    if (type === 'alert') return <AlertTriangle className="h-3 w-3 text-status-warning" />;
+    if (type === 'x') return <XCircle className="h-3 w-3 text-status-danger" />;
+    return <Clock className="h-3 w-3 text-muted-foreground" />;
+  };
+
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-medium">Activity Timeline</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="relative space-y-0">
+          {events.map((ev, i) => {
+            const meta = EVENT_META[ev.eventType] ?? { label: ev.eventType.replace(/[._]/g, ' '), icon: 'clock' as const };
+            const isLast = i === events.length - 1;
+            return (
+              <div key={ev.id} className="flex gap-2.5 relative">
+                {/* Vertical line */}
+                {!isLast && (
+                  <div className="absolute left-[5px] top-[14px] w-px h-[calc(100%)] bg-border" />
+                )}
+                <div className="mt-0.5 flex-shrink-0 z-10 bg-card">{iconEl(meta.icon)}</div>
+                <div className="pb-3 min-w-0">
+                  <p className="text-xs font-medium leading-tight">{meta.label}</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {ev.source && <span className="mr-1.5">{ev.source}</span>}
+                    {ev.createdAt ? new Date(ev.createdAt).toLocaleTimeString() : ''}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+          {events.length === 0 && (
+            <p className="text-xs text-muted-foreground">No events yet.</p>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 // === Outcome Stamp ===
 function OutcomeStamp({ state }: { state: RunState }) {
   if (state === 'accepted') {
@@ -430,6 +493,7 @@ export default function ReferralRunPage() {
           {runState.requirements.length > 0 && <RequirementChecklist requirements={runState.requirements} />}
           <IntakeDecisionCard decision={runState.intakeDecision} />
           {runState.trace.length > 0 && <SponsorTraceRail trace={runState.trace} />}
+          {runState.events.length > 0 && <ActivityTimeline events={runState.events} />}
         </div>
       </div>
 
