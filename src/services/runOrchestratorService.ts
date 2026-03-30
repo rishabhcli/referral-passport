@@ -49,7 +49,8 @@ export const runOrchestratorService = {
     trace.push(traceService.createEntry('context', 'Patient context bound', `Patient: ${patientContext.displayName} (${patientContext.age}${patientContext.sex[0]})`, 'success', 'context-service'));
     trace.push(traceService.createEntry('fhir', 'FHIR context loaded', `Source: ${patientContext.fhirContext.sourceLabel}`, 'success', 'fhir-service'));
 
-    const snapshot = await chartToolService.getPatientSnapshot(patientId);
+    const sourceLabel = patientContext.fhirContext.sourceLabel;
+    const snapshot = await chartToolService.getPatientSnapshot(patientId, sourceLabel);
     trace.push(...snapshot.trace);
     await appendEvent(runId, 'snapshot.received', 'chart-tool', 'assembling', { evidenceCount: snapshot.evidence.length });
 
