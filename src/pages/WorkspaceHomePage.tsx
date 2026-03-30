@@ -6,6 +6,7 @@ import { patientContextService } from '@/services/patientContextService';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Clock, CheckCircle2, XCircle, AlertTriangle, Shield, Activity, User } from 'lucide-react';
+import CreatePatientDialog from '@/components/CreatePatientDialog';
 import type { RunState } from '@/types/domain';
 
 const stateConfig: Record<string, { icon: React.ReactNode; className: string }> = {
@@ -67,8 +68,11 @@ export default function WorkspaceHomePage() {
       {patients && patients.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-foreground">Patients</h2>
-            <span className="text-[11px] text-muted-foreground">{patients.length} total</span>
+            <div className="flex items-center gap-3">
+              <h2 className="text-sm font-semibold text-foreground">Patients</h2>
+              <span className="text-[11px] text-muted-foreground">{patients.length} total</span>
+            </div>
+            <CreatePatientDialog />
           </div>
           <div className="space-y-2">
             {patients.map(patient => {
