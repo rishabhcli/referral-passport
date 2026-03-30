@@ -6,7 +6,7 @@ import { Shield, LogOut, User } from 'lucide-react';
 export default function AppShell() {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
-  const { theme, preference, cycleTheme } = useTheme();
+  useTheme();
 
   const handleSignOut = async () => {
     await signOut();
