@@ -36,6 +36,9 @@ export default function AppShell() {
               </div>
             </div>
             <div className="h-5 w-px bg-border hidden sm:block" />
+            <Button variant="ghost" size="sm" onClick={toggleTheme} className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground">
+              {theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+            </Button>
             <Button variant="ghost" size="sm" onClick={handleSignOut} className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground">
               <LogOut className="h-3.5 w-3.5" />
             </Button>
