@@ -4,10 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { patientContextService } from '@/services/patientContextService';
 import { runOrchestratorService } from '@/services/runOrchestratorService';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Shield, ArrowRight, Loader2 } from 'lucide-react';
+import { Shield, ArrowRight, Loader2, User, Zap, FileSearch, MessageSquare, CheckCircle2 } from 'lucide-react';
 
 export default function NewReferralPage() {
   const [searchParams] = useSearchParams();
@@ -39,67 +38,113 @@ export default function NewReferralPage() {
   };
 
   if (isLoading) {
-    return <div className="flex items-center justify-center py-20 text-sm text-muted-foreground">Loading patient...</div>;
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+      </div>
+    );
   }
 
+  const steps = [
+    { icon: <Zap className="h-3.5 w-3.5" />, label: 'Snapshot chart context', detail: 'FHIR resources pulled from patient record' },
+    { icon: <FileSearch className="h-3.5 w-3.5" />, label: 'Assemble referral passport', detail: 'Evidence mapped against requirement profile' },
+    { icon: <MessageSquare className="h-3.5 w-3.5" />, label: 'Submit to Intake Desk', detail: 'A2A evaluation by Nephrology agent' },
+    { icon: <CheckCircle2 className="h-3.5 w-3.5" />, label: 'Receive decision', detail: 'Accepted, or list of required items returned' },
+  ];
+
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 space-y-6">
-      <div>
-        <h1 className="text-lg font-semibold">New Consult Passport</h1>
+    <div className="mx-auto max-w-2xl px-4 sm:px-6 py-8 space-y-6">
+      {/* Header */}
+      <div className="space-y-1">
+        <h1 className="text-xl font-bold text-foreground">New Consult Passport</h1>
         <p className="text-sm text-muted-foreground">Build and submit a nephrology referral packet</p>
       </div>
 
+      {/* Patient Context Card */}
       {patient && (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Patient Context</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+        <div className="card-elevated p-0 overflow-hidden">
+          <div className="px-5 py-3 border-b bg-muted/30 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
+                <User className="h-3 w-3 text-primary" />
+              </div>
+              <span className="mono-label">Patient Context</span>
+            </div>
+            <Badge variant="outline" className="text-[10px] font-mono uppercase tracking-wider">Synthetic</Badge>
+          </div>
+          <div className="px-5 py-4 space-y-3">
             <div>
-              <p className="font-medium">{patient.display_name}</p>
-              <p className="text-sm text-muted-foreground">{(patient.summary as any)?.age ?? '67'}{patient.sex?.[0]} · MRN: {patient.mrn}</p>
+              <p className="text-base font-semibold text-foreground">{patient.display_name}</p>
+              <p className="text-sm text-muted-foreground">
+                {(patient.summary as any)?.age ?? '67'}{patient.sex?.[0]} · MRN: {patient.mrn}
+              </p>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {conditions.map((c, i) => (
-                <span key={i} className="status-chip bg-secondary text-secondary-foreground">{c.display}</span>
+                <span key={i} className="status-chip bg-secondary text-secondary-foreground text-[11px]">{c.display}</span>
               ))}
             </div>
-            <Badge variant="outline" className="text-xs">Synthetic Demo Patient</Badge>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">Destination</CardTitle>
-        </CardHeader>
-        <CardContent className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center">
-            <Shield className="h-4 w-4 text-primary" />
+      {/* Destination Card */}
+      <div className="card-clinical p-5 flex items-center gap-4">
+        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+          <Shield className="h-5 w-5 text-primary" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-foreground">Nephrology Intake</p>
+          <p className="text-xs text-muted-foreground">Nephrology Intake Desk · A2A Protocol</p>
+        </div>
+        <span className="status-chip bg-status-info-muted text-status-info text-[10px]">Target</span>
+      </div>
+
+      {/* Pipeline Steps */}
+      <div className="card-clinical p-0 overflow-hidden">
+        <div className="px-5 py-3 border-b bg-muted/30">
+          <span className="mono-label">Pipeline Steps</span>
+        </div>
+        <div className="px-5 py-4">
+          <div className="space-y-0">
+            {steps.map((step, i) => (
+              <div key={i} className="flex items-start gap-3 relative py-3">
+                {/* Connector line */}
+                {i < steps.length - 1 && (
+                  <div className="absolute left-[13px] top-[36px] bottom-0 w-px bg-border" />
+                )}
+                <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 text-primary z-10">
+                  {step.icon}
+                </div>
+                <div className="pt-0.5">
+                  <p className="text-sm font-medium text-foreground">{step.label}</p>
+                  <p className="text-xs text-muted-foreground">{step.detail}</p>
+                </div>
+              </div>
+            ))}
           </div>
-          <div>
-            <p className="text-sm font-medium">Nephrology Intake</p>
-            <p className="text-xs text-muted-foreground">Nephrology Intake Desk (A2A)</p>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card className="border-dashed bg-muted/30">
-        <CardContent className="py-4 text-sm text-muted-foreground">
-          <p className="font-medium text-foreground mb-1">What happens next</p>
-          <ol className="list-decimal ml-4 space-y-1 text-xs">
-            <li>Patient chart snapshot is retrieved</li>
-            <li>Referral passport artifact is assembled</li>
-            <li>Packet is submitted to Nephrology Intake for evaluation</li>
-            <li>Intake desk returns acceptance decision or required items</li>
-          </ol>
-        </CardContent>
-      </Card>
+      {/* Error */}
+      {error && (
+        <div className="rounded-xl border border-destructive/30 bg-status-danger-muted px-4 py-3 text-sm text-destructive">
+          {error}
+        </div>
+      )}
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
-
-      <Button size="lg" className="w-full gap-2" onClick={handleBuildAndSubmit} disabled={submitting || !patient}>
-        {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Building & Submitting...</> : <>Build & Submit <ArrowRight className="h-4 w-4" /></>}
+      {/* CTA */}
+      <Button
+        size="lg"
+        className="w-full gap-2 brand-gradient-bg border-0 text-white hover:opacity-90 rounded-xl h-12 text-sm font-medium shadow-elevated"
+        onClick={handleBuildAndSubmit}
+        disabled={submitting || !patient}
+      >
+        {submitting ? (
+          <><Loader2 className="h-4 w-4 animate-spin" /> Building & Submitting...</>
+        ) : (
+          <>Build & Submit <ArrowRight className="h-4 w-4" /></>
+        )}
       </Button>
     </div>
   );
