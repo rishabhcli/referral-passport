@@ -89,23 +89,23 @@ function makeEvents(scenario: 'accepted' | 'blocked') {
   return events;
 }
 
-function makeTrace(scenario: 'accepted' | 'blocked') {
-  const trace = [
-    { id: 't1', kind: 'context' as const, label: 'Patient context bound', description: 'Eleanor Vance (67F) · CKD3, T2DM, HTN', status: 'success', timestamp: ts(9.5), source: 'orchestrator' },
-    { id: 't2', kind: 'mcp' as const, label: 'Chart snapshot requested', description: 'MCP tool call: getPatientSnapshot(demo-001)', status: 'info', timestamp: ts(9), source: 'chart-tool-service' },
-    { id: 't3', kind: 'fhir' as const, label: 'FHIR resources loaded', description: '7 resources retrieved from patient chart', status: 'success', timestamp: ts(8.5), source: 'fhir-data-service' },
-    { id: 't4', kind: 'a2a' as const, label: 'A2A task submitted', description: 'Referral packet submitted to Nephrology Intake', status: 'info', timestamp: ts(7), source: 'intake-desk' },
-    { id: 't5', kind: 'a2a' as const, label: 'A2A response: input_required', description: 'Missing: UACR within 90 days', status: 'warning', timestamp: ts(6), source: 'intake-desk' },
-    { id: 't6', kind: 'mcp' as const, label: 'MCP tool call: get_latest_uacr', description: 'Searching patient chart for UACR observation within 90-day window', status: 'info', timestamp: ts(3.5), source: 'chart-tool-service' },
+function makeTrace(scenario: 'accepted' | 'blocked'): SponsorTraceItem[] {
+  const trace: SponsorTraceItem[] = [
+    { id: 't1', kind: 'context', label: 'Patient context bound', description: 'Eleanor Vance (67F) · CKD3, T2DM, HTN', status: 'success' as TStatus, timestamp: ts(9.5), source: 'orchestrator' },
+    { id: 't2', kind: 'mcp', label: 'Chart snapshot requested', description: 'MCP tool call: getPatientSnapshot(demo-001)', status: 'info' as TStatus, timestamp: ts(9), source: 'chart-tool-service' },
+    { id: 't3', kind: 'fhir', label: 'FHIR resources loaded', description: '7 resources retrieved from patient chart', status: 'success' as TStatus, timestamp: ts(8.5), source: 'fhir-data-service' },
+    { id: 't4', kind: 'a2a', label: 'A2A task submitted', description: 'Referral packet submitted to Nephrology Intake', status: 'info' as TStatus, timestamp: ts(7), source: 'intake-desk' },
+    { id: 't5', kind: 'a2a', label: 'A2A response: input_required', description: 'Missing: UACR within 90 days', status: 'warning' as TStatus, timestamp: ts(6), source: 'intake-desk' },
+    { id: 't6', kind: 'mcp', label: 'MCP tool call: get_latest_uacr', description: 'Searching patient chart for UACR observation within 90-day window', status: 'info' as TStatus, timestamp: ts(3.5), source: 'chart-tool-service' },
   ];
   if (scenario === 'accepted') {
     trace.push(
-      { id: 't7', kind: 'fhir' as const, label: 'FHIR Observation retrieved', description: 'UACR: 285 mg/g (2026-03-10)', status: 'success', timestamp: ts(3), source: 'fhir-data-service' },
-      { id: 't8', kind: 'a2a' as const, label: 'A2A response: accepted', description: 'All requirements satisfied. Referral accepted by Nephrology Intake.', status: 'success', timestamp: ts(2), source: 'intake-desk' },
+      { id: 't7', kind: 'fhir', label: 'FHIR Observation retrieved', description: 'UACR: 285 mg/g (2026-03-10)', status: 'success' as TStatus, timestamp: ts(3), source: 'fhir-data-service' },
+      { id: 't8', kind: 'a2a', label: 'A2A response: accepted', description: 'All requirements satisfied. Referral accepted by Nephrology Intake.', status: 'success' as TStatus, timestamp: ts(2), source: 'intake-desk' },
     );
   } else {
     trace.push(
-      { id: 't7', kind: 'mcp' as const, label: 'UACR not found in chart', description: 'No qualifying UACR observation found in patient record', status: 'warning', timestamp: ts(3), source: 'chart-tool-service' },
+      { id: 't7', kind: 'mcp', label: 'UACR not found in chart', description: 'No qualifying UACR observation found in patient record', status: 'warning' as TStatus, timestamp: ts(3), source: 'chart-tool-service' },
     );
   }
   return trace;
