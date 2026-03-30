@@ -28,6 +28,7 @@ const App = () => (
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/app" element={<AuthGate><AppShell /></AuthGate>}>
               <Route index element={<WorkspaceHomePage />} />
+              <Route path="patients/:patientId" element={<PatientPage />} />
               <Route path="referrals/new" element={<NewReferralPage />} />
               <Route path="runs/:runId" element={<ReferralRunPage />} />
             </Route>

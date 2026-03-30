@@ -201,7 +201,7 @@ export const runOrchestratorService = {
   async listRecentRuns(userId: string) {
     const { data, error } = await supabase
       .from('referral_runs')
-      .select('id, state, state_reason, created_at, updated_at, patients(display_name), destinations(display_name)')
+      .select('id, state, state_reason, patient_id, created_at, updated_at, patients(display_name), destinations(display_name)')
       .eq('created_by', userId)
       .order('created_at', { ascending: false })
       .limit(20);
@@ -209,6 +209,7 @@ export const runOrchestratorService = {
     return (data ?? []).map(r => ({
       id: r.id,
       state: r.state as RunState,
+      patientId: r.patient_id,
       patientName: (r.patients as any)?.display_name ?? 'Unknown',
       destination: (r.destinations as any)?.display_name ?? 'Unknown',
       createdAt: r.created_at ?? '',
