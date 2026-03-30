@@ -68,8 +68,11 @@ export default function WorkspaceHomePage() {
       {patients && patients.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-foreground">Patients</h2>
-            <span className="text-[11px] text-muted-foreground">{patients.length} total</span>
+            <div className="flex items-center gap-3">
+              <h2 className="text-sm font-semibold text-foreground">Patients</h2>
+              <span className="text-[11px] text-muted-foreground">{patients.length} total</span>
+            </div>
+            <CreatePatientDialog />
           </div>
           <div className="space-y-2">
             {patients.map(patient => {
