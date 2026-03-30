@@ -51,7 +51,7 @@ export default function WorkspaceHomePage() {
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium text-foreground">{patient.display_name}</p>
+                <p className="font-medium text-foreground cursor-pointer hover:text-primary transition-colors" onClick={() => navigate(`/app/patients/${patient.id}`)}>{patient.display_name}</p>
                 <p className="text-sm text-muted-foreground">
                   {(patient.summary as any)?.age ?? '67'}
                   {patient.sex?.[0]} · MRN: {patient.mrn}
