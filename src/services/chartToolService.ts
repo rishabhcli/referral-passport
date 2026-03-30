@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase';
 import type { EvidenceItem, SponsorTraceItem } from '@/types/domain';
 
 export const chartToolService = {
-  async getPatientSnapshot(patientId: string): Promise<{
+  async getPatientSnapshot(patientId: string, sourceLabel?: string): Promise<{
     evidence: EvidenceItem[];
     trace: SponsorTraceItem[];
   }> {
@@ -15,7 +15,7 @@ export const chartToolService = {
 
     if (error) throw new Error(`Chart snapshot failed: ${error.message}`);
 
-    const evidence = (resources ?? []).map(r => mapResourceToEvidence(r, true));
+    const evidence = (resources ?? []).map(r => mapResourceToEvidence(r, true, sourceLabel));
     const trace: SponsorTraceItem[] = [
       {
         id: crypto.randomUUID(),
@@ -40,7 +40,7 @@ export const chartToolService = {
     return { evidence, trace };
   },
 
-  async getLatestUacr(patientId: string): Promise<{
+  async getLatestUacr(patientId: string, sourceLabel?: string): Promise<{
     evidence: EvidenceItem | null;
     trace: SponsorTraceItem[];
   }> {
@@ -76,7 +76,7 @@ export const chartToolService = {
       return { evidence: null, trace };
     }
 
-    const evidence = mapResourceToEvidence(resource, true);
+    const evidence = mapResourceToEvidence(resource, true, sourceLabel);
     evidence.newlyAdded = true;
 
     const rJson = resource.resource_json as any;
@@ -94,7 +94,11 @@ export const chartToolService = {
   },
 };
 
-function mapResourceToEvidence(r: { id: string; resource_type: string; resource_key: string; resource_json: unknown; effective_at: string }, attached: boolean): EvidenceItem {
+function mapResourceToEvidence(
+  r: { id: string; resource_type: string; resource_key: string; resource_json: unknown; effective_at: string },
+  attached: boolean,
+  sourceLabel?: string,
+): EvidenceItem {
   const json = r.resource_json as Record<string, any>;
   let label = '';
   let value = '';
@@ -134,7 +138,7 @@ function mapResourceToEvidence(r: { id: string; resource_type: string; resource_
     label,
     date: r.effective_at ? new Date(r.effective_at).toLocaleDateString() : '',
     value,
-    source: 'Demo EHR (Synthetic)',
+    source: sourceLabel ?? 'EHR',
     attached,
     newlyAdded: false,
     resourceType: r.resource_type,

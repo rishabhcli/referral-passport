@@ -14,13 +14,15 @@ export const passportBuilderService = {
       .filter(e => e.resourceType === 'Observation')
       .map(e => `${e.label}: ${e.value}`);
 
+    const conditionList = conditions.length > 0 ? conditions.join(', ') : 'conditions under evaluation';
+
     return {
       id: crypto.randomUUID(),
-      title: `Nephrology Referral — ${patientContext.displayName}`,
-      patientSummary: `${patientContext.displayName}, ${patientContext.age}${patientContext.sex?.[0] ?? ''}, ${conditions.join(', ')}`,
+      title: `Referral — ${patientContext.displayName}`,
+      patientSummary: `${patientContext.displayName}, ${patientContext.age}${patientContext.sex?.[0] ?? ''}, ${conditionList}`,
       destination,
-      reasonForReferral: 'Progressive CKD stage 3 with declining eGFR, concurrent T2DM and HTN. Nephrology consultation requested for co-management and proteinuria evaluation.',
-      clinicalContext: `${patientContext.age}-year-old ${patientContext.sex?.toLowerCase()} with ${conditions.join(', ')}. eGFR declining trend noted over 18 months. Current renal function requires specialist evaluation.`,
+      reasonForReferral: `Consultation requested for ${conditionList}. Specialist evaluation recommended based on current clinical findings.`,
+      clinicalContext: `${patientContext.age}-year-old ${patientContext.sex?.toLowerCase()} with ${conditionList}. Current clinical data requires specialist evaluation.`,
       conditions,
       medications,
       keyFindings,
@@ -38,7 +40,7 @@ export const passportBuilderService = {
     if (!updated.attachedEvidenceIds.includes(newEvidence.id)) {
       updated.attachedEvidenceIds = [...updated.attachedEvidenceIds, newEvidence.id];
     }
-    if (newEvidence.resourceType === 'Observation' && newEvidence.resourceKey?.includes('uacr')) {
+    if (newEvidence.resourceType === 'Observation') {
       updated.keyFindings = [...updated.keyFindings, `${newEvidence.label}: ${newEvidence.value}`];
     }
     return updated;

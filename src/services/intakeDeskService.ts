@@ -1,13 +1,23 @@
 import { supabase } from '@/lib/supabase';
 import type { IntakeDecision, RequirementItem, EvidenceItem } from '@/types/domain';
 
-// A2A-inspired downstream intake desk
 export const intakeDeskService = {
   async evaluate(
     destinationId: string,
     evidence: EvidenceItem[],
     passport: Record<string, unknown>
   ): Promise<IntakeDecision> {
+    // Get destination for agent label
+    const { data: dest } = await supabase
+      .from('destinations')
+      .select('display_name, agent_label')
+      .eq('id', destinationId)
+      .single();
+
+    const agentLabel = dest?.agent_label
+      ? `${dest.agent_label} (A2A)`
+      : `${dest?.display_name ?? 'Intake Desk'} (A2A)`;
+
     // Get active requirement profile
     const { data: profile, error } = await supabase
       .from('requirement_profiles')
@@ -45,7 +55,7 @@ export const intakeDeskService = {
 
     if (missingRequirements.length === 0) {
       decision = 'accepted';
-      summary = 'All requirements satisfied. Referral accepted for nephrology intake processing.';
+      summary = 'All requirements satisfied. Referral accepted for intake processing.';
       taskState = 'completed';
     } else if (missingRequirements.some(r => r.repairable)) {
       decision = 'input_required';
@@ -63,7 +73,7 @@ export const intakeDeskService = {
       missingRequirements,
       satisfiedRequirements,
       summary,
-      agentLabel: 'Nephrology Intake Desk (A2A)',
+      agentLabel,
       timestamp: new Date().toISOString(),
     };
   },
