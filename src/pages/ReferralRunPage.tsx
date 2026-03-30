@@ -493,6 +493,7 @@ export default function ReferralRunPage() {
           {runState.requirements.length > 0 && <RequirementChecklist requirements={runState.requirements} />}
           <IntakeDecisionCard decision={runState.intakeDecision} />
           {runState.trace.length > 0 && <SponsorTraceRail trace={runState.trace} />}
+          {runState.events.length > 0 && <ActivityTimeline events={runState.events} />}
         </div>
       </div>
 
