@@ -296,7 +296,7 @@ function ActivityTimeline({ events }: { events: RunStateModel['events'] }) {
                   <p className="text-xs font-medium leading-tight">{meta.label}</p>
                   <p className="text-[10px] text-muted-foreground">
                     {ev.source && <span className="mr-1.5">{ev.source}</span>}
-                    {ev.timestamp ? new Date(ev.timestamp).toLocaleTimeString() : ''}
+                    {ev.createdAt ? new Date(ev.createdAt).toLocaleTimeString() : ''}
                   </p>
                 </div>
               </div>
