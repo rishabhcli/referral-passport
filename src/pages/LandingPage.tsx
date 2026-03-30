@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { Shield, ArrowRight } from 'lucide-react';
@@ -12,8 +12,7 @@ export default function LandingPage() {
   }
 
   if (session) {
-    navigate('/app', { replace: true });
-    return null;
+    return <Navigate to="/app" replace />;
   }
 
   return (

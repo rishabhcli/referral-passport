@@ -18,8 +18,7 @@ export default function AuthPage() {
   const navigate = useNavigate();
 
   if (session) {
-    navigate('/app', { replace: true });
-    return null;
+    return <Navigate to="/app" replace />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
